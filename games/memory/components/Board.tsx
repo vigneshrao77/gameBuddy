@@ -3,13 +3,7 @@
 import React, { useState } from 'react';
 import { Difficulty, DIFFICULTY_CONFIG } from '../logic/gameLogic';
 import { useMemory } from '../hooks/useMemory';
-
-type DifficultyConfig = { label: string; value: Difficulty; color: string };
-const DIFFICULTIES: DifficultyConfig[] = [
-  { label: 'Easy',   value: 'easy',   color: 'var(--diff-easy)'   },
-  { label: 'Medium', value: 'medium', color: 'var(--diff-medium)' },
-  { label: 'Hard',   value: 'hard',   color: 'var(--diff-hard)'   },
-];
+import { DifficultySelector } from '@/components/ui/DifficultySelector';
 
 export function Board() {
   const [difficulty, setDifficulty] = useState<Difficulty>('medium');
@@ -27,21 +21,11 @@ export function Board() {
     <div className="game-area">
 
       {/* Difficulty Selector */}
-      <div className="game-toolbar">
-        {DIFFICULTIES.map(d => (
-          <button
-            key={d.value}
-            onClick={() => handleDifficultyChange(d.value)}
-            className={difficulty === d.value ? 'pill active' : 'pill'}
-            style={{ '--dot': d.color, '--cat-tint': `${d.color}22` } as React.CSSProperties}
-          >
-            <span className="dot"></span>
-            {d.label}
-            <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
-              &nbsp;({DIFFICULTY_CONFIG[d.value].label})
-            </span>
-          </button>
-        ))}
+      <div className="difficulty-block">
+        <DifficultySelector value={difficulty} onChange={handleDifficultyChange} />
+        {/* The pills used to name the grid size inline; the selector has no
+            room for it, so it reads underneath instead. */}
+        <span className="difficulty-note">{DIFFICULTY_CONFIG[difficulty].label}</span>
       </div>
 
       {/* Stats */}

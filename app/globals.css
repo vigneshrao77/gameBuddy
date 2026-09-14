@@ -603,8 +603,109 @@ footer.foot .foot-links a:hover { color: var(--violet); }
   padding-inline: var(--gutter);
 }
 
-/* Empty for now; holds the space above the button. */
-.landing-body { flex: 1; }
+/* Holds the neon line and the headline that rests on it. */
+.landing-body {
+  flex: 1;
+  display: grid;
+  place-items: center;
+}
+
+/* Shifting by half its own height drops the text's baseline onto the line no
+   matter how many lines it wraps to; the extra step is the gap above it. */
+.landing-headline {
+  position: relative;
+  transform: translateY(calc(-50% - var(--space-4)));
+  max-width: min(90vw, 940px);
+  text-align: center;
+}
+
+/* Stage focus light: a narrow source above the line widening into a pool of
+   light over the text. Sits behind it, at low opacity. */
+.landing-spotlight {
+  position: absolute;
+  left: 50%;
+  bottom: -60%;
+  /* Bounded by the viewport: any wider and the container's overflow clips the
+     cone's sides into a hexagon, any taller and its bright middle gets cut
+     off flat against the top edge. */
+  width: min(170%, 900px, 88vw);
+  height: min(460px, 46vh);
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: -1;
+  clip-path: polygon(46% 0%, 54% 0%, 100% 100%, 0% 100%);
+  /* Transparent at both ends: the lamp is off-frame, so a hard top edge would
+     read as a triangle rather than a beam. */
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(196, 181, 253, 0.115) 30%,
+    rgba(139, 92, 246, 0.065) 58%,
+    rgba(236, 72, 153, 0.025) 80%,
+    transparent 100%
+  );
+  /* The polygon gives the cone hard sides; fading the outer thirds turns them
+     into spill. The apex sits inside the opaque middle, so it stays intact. */
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 34%, #000 66%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, #000 34%, #000 66%, transparent 100%);
+  filter: blur(32px);
+  opacity: 0;
+  animation: spotlight-on 1400ms ease-out 150ms forwards;
+}
+
+/* The pool where the beam lands on the text. */
+.landing-spotlight::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 8%;
+  width: 86%;
+  height: 34%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(196, 181, 253, 0.1) 0%,
+    rgba(139, 92, 246, 0.04) 45%,
+    transparent 72%
+  );
+  filter: blur(20px);
+}
+
+@keyframes spotlight-on {
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-spotlight { animation: none; opacity: 1; }
+}
+
+/* Only `color` and `--shimmer-contrast` are reachable from here — the
+   component sets the gradient and text-fill inline. Unlayered, so it wins
+   over the component's Tailwind utilities. */
+.landing-shimmer {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 5.2vw, 3rem);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  --headline-base: #9084BC;
+  color: var(--headline-base);
+  --shimmer-contrast: #FFFFFF;
+}
+
+/* Whole words stay in one box so lines still break only at spaces. */
+.landing-word { display: inline-block; }
+.landing-letter { display: inline-block; }
+
+/* background-clip:text ignores child opacity, so mid-reveal the parent would
+   paint every letter at once. currentColor is the gradient's base and its
+   background-color, so blanking the colour stops the parent painting and each
+   letter fills itself until the reveal finishes. */
+.shimmer-headline:not(.is-entered) .landing-shimmer { color: transparent; }
+.shimmer-headline:not(.is-entered) .landing-letter {
+  -webkit-text-fill-color: var(--headline-base);
+}
 
 .landing-actions {
   display: flex;

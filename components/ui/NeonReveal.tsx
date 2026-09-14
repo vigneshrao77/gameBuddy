@@ -133,8 +133,12 @@ export function NeonReveal({
       ? `radial-gradient(ellipse 58% 20% at 50% ${pos}, #000 15%, transparent 100%)`
       : `radial-gradient(ellipse 20% 58% at ${pos} 50%, #000 15%, transparent 100%)`;
 
-  const grainMask = [maskAt(crossPct), mirrored ? maskAt(`${verticalOffset * 100}%`) : null]
-    .filter(Boolean)
+  // Deduped, since a mirror at 0.5 lands on top of the original and would
+  // otherwise stack two mask layers into visibly doubled grain.
+  const grainMask = Array.from(
+    new Set(mirrored ? [crossPct, `${verticalOffset * 100}%`] : [crossPct])
+  )
+    .map(maskAt)
     .join(', ');
 
   const rootVars: BarVars = {
