@@ -1,0 +1,107 @@
+/* Neon bar that sweeps across its container.
+   --h hue, --i intensity, --s glow spread, --len final length, --t thickness. */
+
+.root {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.stage {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* The glowing bar. Length animates from 0, so the halo grows with it
+   instead of being clipped or stretched. */
+.bar {
+  position: absolute;
+  border-radius: 999px;
+  background: hsl(var(--h) 100% 96%);
+  opacity: 0;
+  transition:
+    width var(--dur) cubic-bezier(0.16, 1, 0.3, 1) var(--delay),
+    height var(--dur) cubic-bezier(0.16, 1, 0.3, 1) var(--delay),
+    opacity calc(var(--dur) * 0.35) ease-out var(--delay);
+  box-shadow:
+    0 0 calc(4px * var(--s)) hsl(var(--h) 100% 72% / calc(0.9 * var(--i))),
+    0 0 calc(14px * var(--s)) hsl(var(--h) 100% 64% / calc(0.75 * var(--i))),
+    0 0 calc(38px * var(--s)) hsl(var(--h) 100% 58% / calc(0.4 * var(--i))),
+    0 0 calc(90px * var(--s)) hsl(calc(var(--h) + 70) 100% 60% / calc(0.18 * var(--i)));
+}
+
+/* Soft elliptical bloom sitting behind the bar */
+.bloom {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0;
+  filter: blur(calc(30px * var(--s)));
+  transition:
+    width var(--dur) cubic-bezier(0.16, 1, 0.3, 1) var(--delay),
+    height var(--dur) cubic-bezier(0.16, 1, 0.3, 1) var(--delay),
+    opacity calc(var(--dur) * 0.5) ease-out var(--delay);
+  /* Long, eased alpha tail so the glow dissolves instead of ending on an edge. */
+  background: radial-gradient(
+    ellipse at center,
+    hsl(var(--h) 100% 64% / calc(0.26 * var(--i))) 0%,
+    hsl(var(--h) 100% 60% / calc(0.15 * var(--i))) 22%,
+    hsl(calc(var(--h) + 70) 100% 58% / calc(0.07 * var(--i))) 44%,
+    hsl(calc(var(--h) + 70) 100% 58% / calc(0.02 * var(--i))) 66%,
+    transparent 88%
+  );
+}
+
+/* The glow falls off by only 1-3 levels per step down near black, which is
+   where 8-bit contour banding shows up as rings. Grain dithers it away. */
+.grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.09;
+  /* Opaque grey noise centred on 50%, so overlay dithers without lifting black. */
+  mix-blend-mode: overlay;
+  /* Confined to the glow, otherwise the layer reads as a lighter rectangle. */
+  -webkit-mask-image: var(--grain-mask);
+  mask-image: var(--grain-mask);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 1'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.revealed .bar,
+.revealed .bloom { opacity: 1; }
+
+/* ---- Horizontal ---- */
+.horizontal .bar,
+.horizontal .bloom {
+  width: 0;
+  left: var(--left, auto);
+  right: var(--right, auto);
+  transform: var(--shift);
+}
+.horizontal .bar { height: var(--t); }
+.horizontal .bloom { height: calc(var(--t) * 26); }
+
+.horizontal.revealed .bar { width: var(--len); }
+.horizontal.revealed .bloom { width: var(--len); }
+
+/* ---- Vertical ---- */
+.vertical .bar,
+.vertical .bloom {
+  height: 0;
+  top: var(--top, auto);
+  bottom: var(--bottom, auto);
+  transform: var(--shift);
+}
+.vertical .bar { width: var(--t); }
+.vertical .bloom { width: calc(var(--t) * 26); }
+
+.vertical.revealed .bar { height: var(--len); }
+.vertical.revealed .bloom { height: var(--len); }
+
+.content { position: relative; z-index: 1; }
+
+/* Show the finished state rather than sweeping it in. */
+@media (prefers-reduced-motion: reduce) {
+  .bar,
+  .bloom { transition: none; }
+}

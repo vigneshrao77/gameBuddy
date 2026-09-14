@@ -1,0 +1,72 @@
+/* Star-burst button — sparkles hide behind the fill, then fly out on hover.
+   Recoloured from the original peach to the site's violet/pink accents. */
+
+.starButton {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-6);
+  background: var(--violet);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #0D0C14;
+  border: 3px solid var(--violet);
+  border-radius: 12px;
+  box-shadow: 0 0 0 rgba(139, 92, 246, 0.55);
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.3s ease-in-out, color 0.3s ease-in-out,
+    box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out;
+}
+
+.starButton:hover {
+  background: transparent;
+  /* Lighter than the violet border so the label stays readable on the dark bg. */
+  color: #C4B5FD;
+  box-shadow: 0 0 25px rgba(139, 92, 246, 0.55);
+}
+
+.starButton:active { transform: scale(0.97); }
+
+/* Shared star setup. Negative z-index keeps them behind the button fill
+   until hover lifts them above it. */
+.star {
+  position: absolute;
+  height: auto;
+  z-index: -5;
+  filter: drop-shadow(0 0 0 var(--pink));
+  pointer-events: none;
+}
+
+.star svg { display: block; width: 100%; height: auto; }
+.star path { fill: #FFF5FD; }
+
+.starButton:hover .star {
+  z-index: 2;
+  filter: drop-shadow(0 0 10px var(--pink));
+}
+
+/* Resting positions (tucked behind the fill) */
+.star1 { top: 20%; left: 20%; width: 25px; transition: all 1s cubic-bezier(0.05, 0.83, 0.43, 0.96); }
+.star2 { top: 45%; left: 45%; width: 15px; transition: all 1s cubic-bezier(0, 0.4, 0, 1.01); }
+.star3 { top: 40%; left: 40%; width: 5px;  transition: all 1s cubic-bezier(0, 0.4, 0, 1.01); }
+.star4 { top: 20%; left: 40%; width: 8px;  transition: all 0.8s cubic-bezier(0, 0.4, 0, 1.01); }
+.star5 { top: 25%; left: 45%; width: 15px; transition: all 0.6s cubic-bezier(0, 0.4, 0, 1.01); }
+.star6 { top: 5%;  left: 50%; width: 5px;  transition: all 0.8s ease; }
+
+/* Scattered positions on hover */
+.starButton:hover .star1 { top: -80%; left: -30%; }
+.starButton:hover .star2 { top: -25%; left: 10%; }
+.starButton:hover .star3 { top: 55%;  left: 25%; }
+.starButton:hover .star4 { top: 30%;  left: 80%; }
+.starButton:hover .star5 { top: 25%;  left: 115%; }
+.starButton:hover .star6 { top: 5%;   left: 60%; }
+
+/* The sparkles are purely decorative, so drop them rather than animate. */
+@media (prefers-reduced-motion: reduce) {
+  .star { display: none; }
+}

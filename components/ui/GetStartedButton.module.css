@@ -1,0 +1,82 @@
+/* Get Started button — recoloured from the original green to the site's
+   violet -> pink gradient. The two white bars split and rotate on hover. */
+
+.getStarted {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  font-weight: 500;
+  font-size: 17px;
+  padding: var(--space-3) var(--space-6);
+  color: #fff;
+  background: linear-gradient(144deg, #6D28D9, #8B5CF6 50%, #EC4899);
+  border: none;
+  box-shadow: 0 0.7em 1.5em -0.5em rgba(139, 92, 246, 0.55);
+  letter-spacing: 0.05em;
+  border-radius: 8px;
+  cursor: pointer;
+  position: relative;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.getStarted svg {
+  margin-right: var(--space-2);
+  width: 25px;
+  height: 25px;
+}
+
+.getStarted:hover {
+  box-shadow: 0 0.5em 1.5em -0.5em #EC4899;
+  border-top-left-radius: 40px;
+  border-bottom-right-radius: 40px;
+}
+
+.getStarted:active {
+  box-shadow: 0 0.3em 1em -0.5em #F472B6;
+}
+
+.getStarted::before,
+.getStarted::after {
+  content: "";
+  width: 4px;
+  height: 40%;
+  background-color: #fff;
+  position: absolute;
+  transition: all 0.2s;
+}
+
+.getStarted::before {
+  left: 0;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.getStarted::after {
+  right: 0;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.getStarted:hover::before,
+.getStarted:hover::after {
+  height: 60%;
+}
+
+.getStarted:hover::before {
+  border-radius: 5px 0 0 5px;
+  transform: translate(5px, -15px) rotate(45deg);
+}
+
+.getStarted:hover::after {
+  border-radius: 0 5px 5px 0;
+  transform: translate(-5px, 15px) rotate(45deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .getStarted,
+  .getStarted::before,
+  .getStarted::after { transition: none; }
+}

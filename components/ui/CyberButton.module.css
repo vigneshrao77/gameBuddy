@@ -1,0 +1,216 @@
+/* CyberButton CSS Module — Styled to match the website's dark gaming background and violet/pink neon accents */
+
+.cyberButton {
+  position: relative;
+  width: 11em;
+  height: 4em;
+  outline: none;
+  transition: 0.15s ease-out;
+  background-color: rgba(8, 8, 10, 0.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: none;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: var(--text-primary, #EDE9FE);
+  font-family: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  user-select: none;
+  border-radius: 4px;
+  /* The octagon frame is a fixed 11em x 4em, so labels must stay on one line. */
+  white-space: nowrap;
+}
+
+.cyberButton:active {
+  transform: scale(0.96);
+}
+
+/* Every dimension below is in em, so the card-sized variant only needs a
+   smaller font-size for the frame, corners and arrows to scale with it. */
+.small {
+  font-size: 9px;
+}
+
+.label {
+  position: relative;
+  z-index: 2;
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+  pointer-events: none;
+}
+
+.clip {
+  --color: #8B5CF6;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  border: 5px double var(--color);
+  box-shadow: inset 0px 0px 16px rgba(139, 92, 246, 0.45);
+  -webkit-clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+  clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  pointer-events: none;
+}
+
+.arrow {
+  position: absolute;
+  transition: 0.2s ease;
+  background-color: #8B5CF6;
+  top: 35%;
+  width: 11%;
+  height: 30%;
+  pointer-events: none;
+}
+
+.leftArrow {
+  left: -13.5%;
+  -webkit-clip-path: polygon(100% 0, 100% 100%, 0 50%);
+  clip-path: polygon(100% 0, 100% 100%, 0 50%);
+}
+
+.rightArrow {
+  -webkit-clip-path: polygon(100% 49%, 0 0, 0 100%);
+  clip-path: polygon(100% 49%, 0 0, 0 100%);
+  left: 102%;
+}
+
+/* The card variant is not hoverable on its own — the surrounding card link is
+   the hit target, so card hover drives the same animation. */
+.cyberButton:hover .label,
+:global(.card.available):hover .label {
+  color: #FFFFFF;
+  text-shadow: 0 0 10px rgba(236, 72, 153, 0.7);
+}
+
+.cyberButton:hover .rightArrow,
+:global(.card.available):hover .rightArrow {
+  background-color: #EC4899;
+  left: -15%;
+  animation: 0.6s ease-in-out both infinite alternate rightArrowAnim;
+}
+
+.cyberButton:hover .leftArrow,
+:global(.card.available):hover .leftArrow {
+  background-color: #EC4899;
+  left: 103%;
+  animation: 0.6s ease-in-out both infinite alternate leftArrowAnim;
+}
+
+.corner {
+  position: absolute;
+  width: 4em;
+  height: 4em;
+  background-color: #8B5CF6;
+  box-shadow: inset 1px 1px 8px #A78BFA;
+  transform: scale(1) rotate(45deg);
+  transition: 0.2s ease;
+  pointer-events: none;
+}
+
+.rightTop {
+  top: -1.98em;
+  left: 91%;
+}
+
+.leftTop {
+  top: -1.96em;
+  left: -3.0em;
+}
+
+.leftBottom {
+  top: 2.10em;
+  left: -2.15em;
+}
+
+.rightBottom {
+  top: 45%;
+  left: 88%;
+}
+
+.cyberButton:hover .leftTop,
+:global(.card.available):hover .leftTop {
+  animation: 0.1s ease-in-out 0.05s both changeColorNeon,
+    0.2s linear 0.4s both lightEffectNeon;
+}
+
+.cyberButton:hover .rightTop,
+:global(.card.available):hover .rightTop {
+  animation: 0.1s ease-in-out 0.15s both changeColorNeon,
+    0.2s linear 0.4s both lightEffectNeon;
+}
+
+.cyberButton:hover .rightBottom,
+:global(.card.available):hover .rightBottom {
+  animation: 0.1s ease-in-out 0.25s both changeColorNeon,
+    0.2s linear 0.4s both lightEffectNeon;
+}
+
+.cyberButton:hover .leftBottom,
+:global(.card.available):hover .leftBottom {
+  animation: 0.1s ease-in-out 0.35s both changeColorNeon,
+    0.2s linear 0.4s both lightEffectNeon;
+}
+
+.cyberButton:hover .corner,
+:global(.card.available):hover .corner {
+  transform: scale(1.25) rotate(45deg);
+}
+
+.cyberButton:hover .clip,
+:global(.card.available):hover .clip {
+  animation: 0.2s ease-in-out 0.55s both glowNeon;
+  --color: #EC4899;
+}
+
+@keyframes changeColorNeon {
+  from {
+    background-color: #8B5CF6;
+  }
+  to {
+    background-color: #EC4899;
+  }
+}
+
+@keyframes lightEffectNeon {
+  from {
+    box-shadow: 1px 1px 6px #EC4899;
+  }
+  to {
+    box-shadow: 0 0 3px #F472B6;
+  }
+}
+
+@keyframes glowNeon {
+  from {
+    box-shadow: inset 0px 0px 16px rgba(139, 92, 246, 0.45);
+  }
+  to {
+    box-shadow: inset 0px 0px 32px #EC4899, 0 0 16px rgba(236, 72, 153, 0.35);
+  }
+}
+
+@keyframes leftArrowAnim {
+  from {
+    transform: translate(0px);
+  }
+  to {
+    transform: translateX(10px);
+  }
+}
+
+@keyframes rightArrowAnim {
+  from {
+    transform: translate(0px);
+  }
+  to {
+    transform: translateX(-10px);
+  }
+}
