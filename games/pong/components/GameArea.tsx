@@ -8,11 +8,7 @@ const W = 600, H = 400, PADDLE_W = 12, PADDLE_H = 80, BALL_R = 8;
 const AI_SPEED: Record<Difficulty, number> = { easy: 2.5, medium: 4.2, hard: 6.5 };
 const BALL_SPEED = 5;
 
-const DIFFICULTIES: { label: string; value: Difficulty; color: string }[] = [
-  { label: 'Easy',   value: 'easy',   color: 'var(--diff-easy)'   },
-  { label: 'Medium', value: 'medium', color: 'var(--diff-medium)' },
-  { label: 'Hard',   value: 'hard',   color: 'var(--diff-hard)'   },
-];
+import { DifficultySelector } from '@/components/ui/DifficultySelector';
 
 export function GameArea() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -192,15 +188,10 @@ export function GameArea() {
   return (
     <div className="game-area">
       {/* Difficulty */}
-      <div className="game-toolbar">
-        {DIFFICULTIES.map(d => (
-          <button key={d.value}
-            onClick={() => { setDifficulty(d.value); stopGame(); setWinner(null); }}
-            className={difficulty === d.value ? 'pill active' : 'pill'}
-            style={{ '--dot': d.color } as React.CSSProperties}
-          ><span className="dot"></span>{d.label}</button>
-        ))}
-      </div>
+      <DifficultySelector
+        value={difficulty}
+        onChange={(d) => { setDifficulty(d); stopGame(); setWinner(null); }}
+      />
 
       {/* Score */}
       <div className="game-stats" style={{ fontSize: '1.3rem', fontWeight: 700 }}>

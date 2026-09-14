@@ -3,11 +3,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Difficulty, Dir, DIFFICULTY_CONFIG, initGrid, addTile, move, isGameOver, hasWon } from '../logic/gameLogic';
 
-const DIFFICULTIES: { label: string; value: Difficulty; color: string }[] = [
-  { label: 'Easy',   value: 'easy',   color: 'var(--diff-easy)'   },
-  { label: 'Medium', value: 'medium', color: 'var(--diff-medium)' },
-  { label: 'Hard',   value: 'hard',   color: 'var(--diff-hard)'   },
-];
+import { DifficultySelector } from '@/components/ui/DifficultySelector';
 
 // Tile colours
 const TILE_COLORS: Record<number, { bg: string; text: string }> = {
@@ -91,15 +87,10 @@ export function GameArea() {
     <div className="game-area">
 
       {/* Difficulty */}
-      <div className="game-toolbar">
-        {DIFFICULTIES.map(d => (
-          <button key={d.value}
-            onClick={() => { setDifficulty(d.value); startNew(d.value); }}
-            className={difficulty === d.value ? 'pill active' : 'pill'}
-            style={{ '--dot': d.color } as React.CSSProperties}
-          ><span className="dot"></span>{d.label}</button>
-        ))}
-      </div>
+      <DifficultySelector
+        value={difficulty}
+        onChange={(d) => { setDifficulty(d); startNew(d); }}
+      />
 
       {/* Scores */}
       <div className="game-stats">

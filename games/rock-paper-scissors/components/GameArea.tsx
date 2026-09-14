@@ -5,12 +5,7 @@ import { Choice, CHOICES, Difficulty } from '../logic/gameLogic';
 import { useRockPaperScissors } from '../hooks/useRockPaperScissors';
 import { HandMetal, Hand, Scissors } from 'lucide-react';
 
-type DifficultyConfig = { label: string; value: Difficulty; color: string };
-const DIFFICULTIES: DifficultyConfig[] = [
-  { label: 'Easy',   value: 'easy',   color: 'var(--diff-easy)'   },
-  { label: 'Medium', value: 'medium', color: 'var(--diff-medium)' },
-  { label: 'Hard',   value: 'hard',   color: 'var(--diff-hard)'   },
-];
+import { DifficultySelector } from '@/components/ui/DifficultySelector';
 
 const ChoiceIcon = ({ choice, size = 48 }: { choice: Choice; size?: number }) => {
   if (choice === 'rock')     return <HandMetal size={size} />;
@@ -33,18 +28,7 @@ export function GameArea() {
     <div className="game-area">
 
       {/* Difficulty */}
-      <div className="game-toolbar">
-        {DIFFICULTIES.map(d => (
-          <button
-            key={d.value}
-            onClick={() => handleDifficultyChange(d.value)}
-            className={difficulty === d.value ? 'pill active' : 'pill'}
-            style={{ '--dot': d.color, '--cat-tint': `${d.color}22` } as React.CSSProperties}
-          >
-            <span className="dot"></span>{d.label}
-          </button>
-        ))}
-      </div>
+      <DifficultySelector value={difficulty} onChange={handleDifficultyChange} />
 
       {/* Score board */}
       <div className="game-stats">

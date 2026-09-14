@@ -3,11 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Difficulty, DIFFICULTY_CONFIG } from '../logic/gameLogic';
 
-const DIFFICULTIES: { label: string; value: Difficulty; color: string }[] = [
-  { label: 'Easy',   value: 'easy',   color: 'var(--diff-easy)'   },
-  { label: 'Medium', value: 'medium', color: 'var(--diff-medium)' },
-  { label: 'Hard',   value: 'hard',   color: 'var(--diff-hard)'   },
-];
+import { DifficultySelector } from '@/components/ui/DifficultySelector';
 
 export function GameArea() {
   const [difficulty, setDifficulty] = useState<Difficulty>('medium');
@@ -84,21 +80,25 @@ export function GameArea() {
     setScore(s => s + 1);
   }, [running, activeMoles]);
 
+  /** Switching difficulty abandons the round and returns the board to idle. */
+  const handleDifficultyChange = (d: Difficulty) => {
+    setDifficulty(d);
+    clearAll();
+    setRunning(false);
+    setFinished(false);
+    setScore(0);
+    setMissed(0);
+    setTimeLeft(DIFFICULTY_CONFIG[d].gameDuration);
+    setActiveMoles(new Set());
+  };
+
   const cols = cfg.holes === 6 ? 3 : 3;
 
   return (
     <div className="game-area">
 
       {/* Difficulty */}
-      <div className="game-toolbar">
-        {DIFFICULTIES.map(d => (
-          <button key={d.value}
-            onClick={() => { setDifficulty(d.value); clearAll(); setRunning(false); setFinished(false); setScore(0); setMissed(0); setTimeLeft(DIFFICULTY_CONFIG[d.value].gameDuration); setActiveMoles(new Set()); }}
-            className={difficulty === d.value ? 'pill active' : 'pill'}
-            style={{ '--dot': d.color } as React.CSSProperties}
-          ><span className="dot"></span>{d.label}</button>
-        ))}
-      </div>
+      <DifficultySelector value={difficulty} onChange={handleDifficultyChange} />
 
       {/* Stats */}
       <div className="game-stats">

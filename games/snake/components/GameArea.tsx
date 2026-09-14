@@ -9,11 +9,7 @@ import {
 
 const CELL = 22; // px per cell
 
-const DIFFICULTIES: { label: string; value: Difficulty; color: string }[] = [
-  { label: 'Easy',   value: 'easy',   color: 'var(--diff-easy)'   },
-  { label: 'Medium', value: 'medium', color: 'var(--diff-medium)' },
-  { label: 'Hard',   value: 'hard',   color: 'var(--diff-hard)'   },
-];
+import { DifficultySelector } from '@/components/ui/DifficultySelector';
 
 export function GameArea() {
   const [difficulty, setDifficulty] = useState<Difficulty>('medium');
@@ -113,15 +109,10 @@ export function GameArea() {
     <div className="game-area">
 
       {/* Difficulty */}
-      <div className="game-toolbar">
-        {DIFFICULTIES.map(d => (
-          <button key={d.value}
-            onClick={() => { setDifficulty(d.value); resetGame(d.value); }}
-            className={difficulty === d.value ? 'pill active' : 'pill'}
-            style={{ '--dot': d.color } as React.CSSProperties}
-          ><span className="dot"></span>{d.label}</button>
-        ))}
-      </div>
+      <DifficultySelector
+        value={difficulty}
+        onChange={(d) => { setDifficulty(d); resetGame(d); }}
+      />
 
       {/* Score */}
       <div className="game-stats">
