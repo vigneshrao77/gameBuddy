@@ -701,8 +701,13 @@ footer.foot .foot-links a:hover { color: var(--violet); }
 /* background-clip:text ignores child opacity, so mid-reveal the parent would
    paint every letter at once. currentColor is the gradient's base and its
    background-color, so blanking the colour stops the parent painting and each
-   letter fills itself until the reveal finishes. */
-.shimmer-headline:not(.is-entered) .landing-shimmer { color: transparent; }
+   letter fills itself until the reveal finishes.
+   The shimmer band is a separate colour and has to be blanked too, or a sweep
+   landing mid-reveal paints a white copy of the whole line over the letters. */
+.shimmer-headline:not(.is-entered) .landing-shimmer {
+  color: transparent;
+  --shimmer-contrast: transparent;
+}
 .shimmer-headline:not(.is-entered) .landing-letter {
   -webkit-text-fill-color: var(--headline-base);
 }

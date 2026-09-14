@@ -39,7 +39,7 @@ export function ShimmerHeadline({
   text,
   delay = 0.4,
   stagger = 0.035,
-  shimmerDelay = 1.2,
+  shimmerDelay = 0.6,
   shimmerDuration = 1.8,
   className,
 }: ShimmerHeadlineProps) {
