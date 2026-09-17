@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 import { gamesRegistry } from '@/config/games';
 import { GameGrid } from '@/components/games/GameGrid';
 import { StarButton } from '@/components/ui/StarButton';
-import { Activity, HandMetal, LayoutGrid, Timer, Grid3x3 } from 'lucide-react';
+import { TunnelAnimation } from '@/components/ui/TunnelAnimation';
+import { motion } from 'motion/react';
 
 export default function HomePage() {
   const [activeCategory, setActiveCategory] = useState<string>('all');
@@ -27,21 +28,7 @@ export default function HomePage() {
         </div>
 
         <div className="token-field" aria-hidden="true">
-          <div className="token" style={{ left: '6%', top: '10%', width: 72, height: 72, background: 'var(--strategy-tint)', color: 'var(--strategy)', '--r': '-8deg', animationDelay: '0s' } as React.CSSProperties}>
-            <Grid3x3 width={30} height={30} strokeWidth={1.8} />
-          </div>
-          <div className="token" style={{ left: '52%', top: '0%', width: 58, height: 58, background: 'var(--puzzle-tint)', color: 'var(--puzzle)', '--r': '6deg', animationDelay: '0.6s' } as React.CSSProperties}>
-            <LayoutGrid width={24} height={24} strokeWidth={1.8} />
-          </div>
-          <div className="token" style={{ left: '22%', top: '52%', width: 64, height: 64, background: 'var(--multiplayer-tint)', color: 'var(--multiplayer)', '--r': '-4deg', animationDelay: '1.1s' } as React.CSSProperties}>
-            <HandMetal width={26} height={26} strokeWidth={1.8} />
-          </div>
-          <div className="token" style={{ left: '70%', top: '42%', width: 78, height: 78, background: 'var(--quick-tint)', color: 'var(--quick)', '--r': '9deg', animationDelay: '0.3s' } as React.CSSProperties}>
-            <Timer width={32} height={32} strokeWidth={1.8} />
-          </div>
-          <div className="token" style={{ left: '40%', top: '78%', width: 52, height: 52, background: 'var(--arcade-tint)', color: 'var(--arcade)', '--r': '-10deg', animationDelay: '0.85s' } as React.CSSProperties}>
-            <Activity width={22} height={22} strokeWidth={1.8} />
-          </div>
+          <TunnelAnimation />
         </div>
       </section>
 
@@ -54,47 +41,30 @@ export default function HomePage() {
         </div>
 
         <div className="filters" role="group" aria-label="Filter games by category">
-          <button 
-            className={`pill ${activeCategory === 'all' ? 'active' : ''}`} 
-            onClick={() => setActiveCategory('all')}
-          >
-            All
-          </button>
-          <button 
-            className={`pill ${activeCategory === 'arcade' ? 'active' : ''}`} 
-            style={{ '--dot': 'var(--arcade)' } as React.CSSProperties}
-            onClick={() => setActiveCategory('arcade')}
-          >
-            <span className="dot"></span>Arcade
-          </button>
-          <button 
-            className={`pill ${activeCategory === 'puzzle' ? 'active' : ''}`} 
-            style={{ '--dot': 'var(--puzzle)' } as React.CSSProperties}
-            onClick={() => setActiveCategory('puzzle')}
-          >
-            <span className="dot"></span>Puzzle
-          </button>
-          <button 
-            className={`pill ${activeCategory === 'strategy' ? 'active' : ''}`} 
-            style={{ '--dot': 'var(--strategy)' } as React.CSSProperties}
-            onClick={() => setActiveCategory('strategy')}
-          >
-            <span className="dot"></span>Strategy
-          </button>
-          <button 
-            className={`pill ${activeCategory === 'quick' ? 'active' : ''}`} 
-            style={{ '--dot': 'var(--quick)' } as React.CSSProperties}
-            onClick={() => setActiveCategory('quick')}
-          >
-            <span className="dot"></span>Quick
-          </button>
-          <button 
-            className={`pill ${activeCategory === 'multiplayer' ? 'active' : ''}`} 
-            style={{ '--dot': 'var(--multiplayer)' } as React.CSSProperties}
-            onClick={() => setActiveCategory('multiplayer')}
-          >
-            <span className="dot"></span>Multiplayer
-          </button>
+          {[
+            { id: 'all', label: 'All', dot: null },
+            { id: 'arcade', label: 'Arcade', dot: 'var(--arcade)' },
+            { id: 'puzzle', label: 'Puzzle', dot: 'var(--puzzle)' },
+            { id: 'strategy', label: 'Strategy', dot: 'var(--strategy)' },
+            { id: 'quick', label: 'Quick', dot: 'var(--quick)' },
+          ].map((cat) => (
+            <button
+              key={cat.id}
+              className={`pill ${activeCategory === cat.id ? 'active' : ''}`}
+              style={cat.dot ? { '--dot': cat.dot } as React.CSSProperties : undefined}
+              onClick={() => setActiveCategory(cat.id)}
+            >
+              {activeCategory === cat.id && (
+                <motion.div
+                  layoutId="active-pill-bg"
+                  className="pill-active-bg"
+                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                />
+              )}
+              {cat.dot && <span className="dot"></span>}
+              {cat.label}
+            </button>
+          ))}
         </div>
 
         <GameGrid games={filteredGames} />

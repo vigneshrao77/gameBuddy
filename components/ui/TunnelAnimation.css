@@ -1,0 +1,60 @@
+.tunnel-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute; /* Changed to absolute to fit within token-field bounds properly */
+  inset: 0;
+  overflow: visible;
+}
+
+.tunnel-loader {
+  height: 240px; /* Scaled down slightly to fit well in the hero right column */
+  width: 240px;
+  position: relative;
+  display: flex;
+  transform-style: preserve-3d;
+  perspective: 400px;
+  transform: rotateX(60deg);
+  border-radius: 500px;
+}
+
+@media (min-width: 1024px) {
+  .tunnel-loader {
+    height: 280px;
+    width: 280px;
+    perspective: 500px;
+  }
+}
+
+.tunnel-loader .tunnel-circle {
+  --distance: 18px; /* Adjusted distance for scaling */
+  --animationEase: ease-in-out;
+  position: absolute;
+  top: calc(var(--index) * var(--distance));
+  bottom: calc(var(--index) * var(--distance));
+  left: calc(var(--index) * var(--distance));
+  right: calc(var(--index) * var(--distance));
+  margin: auto;
+  border: 16px solid var(--color); /* Slightly thinner borders for cleaner look */
+  animation: tunnel-animate var(--animationSpeed) var(--animationEase) infinite;
+  animation-delay: calc(
+    var(--index) * (var(--animationSpeed) / var(--circlesCount))
+  );
+  border-radius: 500px;
+  box-shadow:
+    0px 4px 4px var(--color),
+    0px 4px 8px var(--color) inset,
+    0px 4px 10px var(--color) inset;
+}
+
+@keyframes tunnel-animate {
+  0%,
+  100% {
+    transform: translateZ(0);
+  }
+  50% {
+    transform: translateZ(calc(var(--index) * var(--distance) * -1));
+  }
+}
