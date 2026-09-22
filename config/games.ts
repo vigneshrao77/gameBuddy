@@ -2,6 +2,17 @@ import { GameMeta } from "@/types/game";
 
 export const gamesRegistry: GameMeta[] = [
   {
+    id: "reversi",
+    name: "Reversi",
+    description: "Classic 8×8 disc-flipping game. Surround the computer's discs to capture them.",
+    category: "strategy",
+    icon: "Disc",
+    route: "/games/reversi",
+    difficulty: "medium",
+    players: "1",
+    status: "available",
+  },
+  {
     id: "battleship",
     name: "Battleship",
     description: "Naval combat game. Guess the coordinates to sink the computer's hidden fleet.",
