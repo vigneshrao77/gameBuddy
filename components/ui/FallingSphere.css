@@ -2,79 +2,494 @@
   position: absolute;
   top: -12px;
   left: 0;
+
   width: 100%;
   height: 100%;
+
   pointer-events: none;
   z-index: 20;
+
+  overflow: visible;
 }
+
+
+/* =========================================================
+   HORIZONTAL MOTION
+========================================================= */
 
 .fs-x {
   position: absolute;
+
   top: 0;
   left: 0;
+
   width: 100%;
-  animation: fs-move-x 3s linear infinite;
+
+  animation:
+    fs-move-x 4.2s cubic-bezier(0.45, 0, 0.55, 1)
+    infinite;
+
+  will-change: transform, opacity;
 }
+
+
+/* =========================================================
+   VERTICAL / PHYSICS MOTION
+========================================================= */
 
 .fs-y {
   position: absolute;
+
   top: 0;
   left: 0;
-  animation: fs-move-y 3s infinite;
+
+  animation:
+    fs-move-y 4.2s cubic-bezier(0.37, 0, 0.63, 1)
+    infinite;
+
+  will-change: transform;
 }
 
-.fs-ball {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #ffffff;
-  box-shadow: 
-    0 0 10px 2px rgba(190, 145, 255, 0.9),
-    0 0 24px 6px rgba(128, 65, 235, 0.6);
-  animation: fs-squash 3s infinite;
-  position: relative;
-}
 
-.fs-glow {
+/* =========================================================
+   ENERGY TRAIL
+========================================================= */
+
+.fs-trail {
   position: absolute;
-  inset: -15px;
+
+  width: 7px;
+  height: 75px;
+
+  left: 3px;
+  top: 4px;
+
+  transform-origin: top center;
+
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(220,190,255,0.7) 0%, transparent 60%);
-  filter: blur(4px);
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(205, 170, 255, 0.45),
+      rgba(140, 80, 240, 0.18),
+      transparent
+    );
+
+  filter: blur(5px);
+
+  opacity: 0;
+
+  animation:
+    fs-trail 4.2s ease-in-out infinite;
+
   pointer-events: none;
 }
 
-@keyframes fs-move-x {
-  0% { transform: translateX(-10%); opacity: 0; }
-  5% { opacity: 1; }
-  65% { transform: translateX(85%); } /* Reaches right edge */
-  75% { transform: translateX(95%); opacity: 1; } /* Falls off */
-  90% { transform: translateX(105%); opacity: 0; } /* Disappears */
-  100% { transform: translateX(105%); opacity: 0; }
+
+/* =========================================================
+   MAIN ORB
+========================================================= */
+
+.fs-ball {
+  position: relative;
+
+  width: 13px;
+  height: 13px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle at 35% 30%,
+      #ffffff 0%,
+      #f6efff 18%,
+      #d7baff 42%,
+      #a56cff 68%,
+      #6e35d8 100%
+    );
+
+  box-shadow:
+    0 0 5px rgba(255, 255, 255, 0.95),
+    0 0 12px rgba(213, 178, 255, 0.95),
+    0 0 25px rgba(156, 91, 255, 0.8),
+    0 0 48px rgba(105, 45, 220, 0.45);
+
+  animation:
+    fs-squash 4.2s cubic-bezier(0.37, 0, 0.63, 1)
+    infinite;
+
+  will-change: transform, filter, opacity;
+
+  z-index: 3;
 }
+
+
+/* =========================================================
+   WHITE HOT CORE
+========================================================= */
+
+.fs-core {
+  position: absolute;
+
+  width: 4px;
+  height: 4px;
+
+  top: 2px;
+  left: 3px;
+
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 0 4px #ffffff,
+    0 0 8px rgba(235, 215, 255, 0.9);
+
+  opacity: 0.95;
+
+  z-index: 3;
+}
+
+
+/* =========================================================
+   ATMOSPHERIC GLOW
+========================================================= */
+
+.fs-glow {
+  position: absolute;
+
+  inset: -17px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(235, 215, 255, 0.45) 0%,
+      rgba(190, 145, 255, 0.3) 22%,
+      rgba(128, 65, 235, 0.12) 48%,
+      transparent 72%
+    );
+
+  filter: blur(6px);
+
+  opacity: 0.8;
+
+  animation:
+    fs-glow-pulse 1.8s ease-in-out infinite;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   HORIZONTAL TRAVEL
+========================================================= */
+
+@keyframes fs-move-x {
+
+  /* Entry */
+  0% {
+    transform: translateX(-12%);
+    opacity: 0;
+  }
+
+  4% {
+    opacity: 1;
+  }
+
+  /* Accelerating */
+  18% {
+    transform: translateX(18%);
+  }
+
+  /* Main travel */
+  48% {
+    transform: translateX(58%);
+  }
+
+  /* Approaching edge */
+  66% {
+    transform: translateX(82%);
+  }
+
+  /* Final movement */
+  76% {
+    transform: translateX(96%);
+    opacity: 1;
+  }
+
+  /* Exit */
+  86% {
+    transform: translateX(108%);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(108%);
+    opacity: 0;
+  }
+}
+
+
+/* =========================================================
+   VERTICAL MOTION
+   Small bounces → larger bounce → final drop
+========================================================= */
 
 @keyframes fs-move-y {
-  /* Bouncing sequence */
-  0%  { transform: translateY(0); animation-timing-function: cubic-bezier(0.2, 0.8, 0.4, 1); }
-  10% { transform: translateY(-24px); animation-timing-function: cubic-bezier(0.6, 0, 0.8, 0.2); }
-  
-  20% { transform: translateY(0); animation-timing-function: cubic-bezier(0.2, 0.8, 0.4, 1); }
-  30% { transform: translateY(-24px); animation-timing-function: cubic-bezier(0.6, 0, 0.8, 0.2); }
-  
-  40% { transform: translateY(0); animation-timing-function: cubic-bezier(0.2, 0.8, 0.4, 1); }
-  50% { transform: translateY(-24px); animation-timing-function: cubic-bezier(0.6, 0, 0.8, 0.2); }
-  
-  60% { transform: translateY(0); animation-timing-function: cubic-bezier(0.6, 0, 0.9, 0.1); }
-  
-  /* The big fall */
-  90% { transform: translateY(180px); }
-  100% { transform: translateY(180px); }
+
+  /* Entry */
+  0% {
+    transform: translateY(0);
+  }
+
+
+  /* ---------------------------------------------
+     BOUNCE 1
+  --------------------------------------------- */
+
+  6% {
+    transform: translateY(-20px);
+  }
+
+  12% {
+    transform: translateY(0);
+  }
+
+
+  /* ---------------------------------------------
+     BOUNCE 2
+  --------------------------------------------- */
+
+  18% {
+    transform: translateY(-28px);
+  }
+
+  25% {
+    transform: translateY(0);
+  }
+
+
+  /* ---------------------------------------------
+     BOUNCE 3
+  --------------------------------------------- */
+
+  31% {
+    transform: translateY(-36px);
+  }
+
+  39% {
+    transform: translateY(0);
+  }
+
+
+  /* ---------------------------------------------
+     BOUNCE 4 — BIGGER
+  --------------------------------------------- */
+
+  45% {
+    transform: translateY(-48px);
+  }
+
+  54% {
+    transform: translateY(0);
+  }
+
+
+  /* ---------------------------------------------
+     SMALL PAUSE
+  --------------------------------------------- */
+
+  59% {
+    transform: translateY(-8px);
+  }
+
+  62% {
+    transform: translateY(0);
+  }
+
+
+  /* ---------------------------------------------
+     FINAL FALL
+  --------------------------------------------- */
+
+  68% {
+    transform: translateY(12px);
+  }
+
+  74% {
+    transform: translateY(55px);
+  }
+
+  80% {
+    transform: translateY(125px);
+  }
+
+  88% {
+    transform: translateY(210px);
+  }
+
+  100% {
+    transform: translateY(230px);
+  }
 }
 
+
+/* =========================================================
+   SQUASH + STRETCH
+========================================================= */
+
 @keyframes fs-squash {
-  0%, 20%, 40%, 60% { transform: scale(1.4, 0.6); } /* Hit ground */
-  5%, 15%, 25%, 35%, 45%, 55% { transform: scale(0.85, 1.15); } /* Mid air */
-  10%, 30%, 50% { transform: scale(1, 1); } /* Apex */
-  65%, 75% { transform: scale(0.7, 1.4); } /* Falling fast */
-  100% { transform: scale(1, 1); }
+
+  /* Initial */
+  0%,
+  4% {
+    transform: scale(0.8, 1.18);
+  }
+
+
+  /* First landing */
+  12% {
+    transform: scale(1.45, 0.58);
+  }
+
+  15% {
+    transform: scale(0.85, 1.18);
+  }
+
+
+  /* Second landing */
+  25% {
+    transform: scale(1.5, 0.55);
+  }
+
+  28% {
+    transform: scale(0.84, 1.2);
+  }
+
+
+  /* Third landing */
+  39% {
+    transform: scale(1.55, 0.52);
+  }
+
+  42% {
+    transform: scale(0.82, 1.22);
+  }
+
+
+  /* Fourth landing */
+  54% {
+    transform: scale(1.65, 0.48);
+  }
+
+  57% {
+    transform: scale(0.8, 1.25);
+  }
+
+
+  /* Floating */
+  62% {
+    transform: scale(1, 1);
+  }
+
+
+  /* Accelerating downward */
+  68% {
+    transform: scale(0.85, 1.25);
+  }
+
+  76% {
+    transform: scale(0.7, 1.45);
+  }
+
+  84% {
+    transform: scale(0.58, 1.7);
+  }
+
+
+  /* Exit */
+  90% {
+    transform: scale(0.5, 1.85);
+  }
+
+  100% {
+    transform: scale(0.4, 1.9);
+  }
+}
+
+
+/* =========================================================
+   TRAIL
+========================================================= */
+
+@keyframes fs-trail {
+
+  0%,
+  58% {
+    opacity: 0;
+    transform: scaleY(0.2);
+  }
+
+  65% {
+    opacity: 0.15;
+    transform: scaleY(0.5);
+  }
+
+  72% {
+    opacity: 0.4;
+    transform: scaleY(1);
+  }
+
+  82% {
+    opacity: 0.7;
+    transform: scaleY(1.5);
+  }
+
+  90% {
+    opacity: 0;
+    transform: scaleY(2);
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+
+/* =========================================================
+   GLOW PULSE
+========================================================= */
+
+@keyframes fs-glow-pulse {
+
+  0%,
+  100% {
+    transform: scale(0.9);
+    opacity: 0.55;
+  }
+
+  50% {
+    transform: scale(1.12);
+    opacity: 0.95;
+  }
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .fs-x,
+  .fs-y,
+  .fs-ball,
+  .fs-glow,
+  .fs-trail {
+    animation: none;
+  }
+
 }
