@@ -1,0 +1,80 @@
+.falling-sphere-container {
+  position: absolute;
+  top: -12px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.fs-x {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  animation: fs-move-x 3s linear infinite;
+}
+
+.fs-y {
+  position: absolute;
+  top: 0;
+  left: 0;
+  animation: fs-move-y 3s infinite;
+}
+
+.fs-ball {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 
+    0 0 10px 2px rgba(190, 145, 255, 0.9),
+    0 0 24px 6px rgba(128, 65, 235, 0.6);
+  animation: fs-squash 3s infinite;
+  position: relative;
+}
+
+.fs-glow {
+  position: absolute;
+  inset: -15px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(220,190,255,0.7) 0%, transparent 60%);
+  filter: blur(4px);
+  pointer-events: none;
+}
+
+@keyframes fs-move-x {
+  0% { transform: translateX(-10%); opacity: 0; }
+  5% { opacity: 1; }
+  65% { transform: translateX(85%); } /* Reaches right edge */
+  75% { transform: translateX(95%); opacity: 1; } /* Falls off */
+  90% { transform: translateX(105%); opacity: 0; } /* Disappears */
+  100% { transform: translateX(105%); opacity: 0; }
+}
+
+@keyframes fs-move-y {
+  /* Bouncing sequence */
+  0%  { transform: translateY(0); animation-timing-function: cubic-bezier(0.2, 0.8, 0.4, 1); }
+  10% { transform: translateY(-24px); animation-timing-function: cubic-bezier(0.6, 0, 0.8, 0.2); }
+  
+  20% { transform: translateY(0); animation-timing-function: cubic-bezier(0.2, 0.8, 0.4, 1); }
+  30% { transform: translateY(-24px); animation-timing-function: cubic-bezier(0.6, 0, 0.8, 0.2); }
+  
+  40% { transform: translateY(0); animation-timing-function: cubic-bezier(0.2, 0.8, 0.4, 1); }
+  50% { transform: translateY(-24px); animation-timing-function: cubic-bezier(0.6, 0, 0.8, 0.2); }
+  
+  60% { transform: translateY(0); animation-timing-function: cubic-bezier(0.6, 0, 0.9, 0.1); }
+  
+  /* The big fall */
+  90% { transform: translateY(180px); }
+  100% { transform: translateY(180px); }
+}
+
+@keyframes fs-squash {
+  0%, 20%, 40%, 60% { transform: scale(1.4, 0.6); } /* Hit ground */
+  5%, 15%, 25%, 35%, 45%, 55% { transform: scale(0.85, 1.15); } /* Mid air */
+  10%, 30%, 50% { transform: scale(1, 1); } /* Apex */
+  65%, 75% { transform: scale(0.7, 1.4); } /* Falling fast */
+  100% { transform: scale(1, 1); }
+}
