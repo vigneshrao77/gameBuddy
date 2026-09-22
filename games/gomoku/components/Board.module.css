@@ -1,0 +1,91 @@
+.boardContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+  padding: var(--space-4);
+  max-width: 100%;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(15, 20px);
+  grid-template-rows: repeat(15, 20px);
+  background-color: #d18b47; /* Wooden board color */
+  border: 4px solid #8b5a2b;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  position: relative;
+  /* Add grid lines via background image */
+  background-image: 
+    linear-gradient(#8b5a2b 1px, transparent 1px),
+    linear-gradient(90deg, #8b5a2b 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%;
+  background-position: center;
+}
+
+@media (min-width: 640px) {
+  .board {
+    grid-template-columns: repeat(15, 30px);
+    grid-template-rows: repeat(15, 30px);
+  }
+}
+
+.cell {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.cell:hover::after {
+  content: '';
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  background-color: rgba(0,0,0,0.2);
+  border-radius: 50%;
+}
+
+.disc {
+  width: 85%;
+  height: 85%;
+  border-radius: 50%;
+  position: absolute;
+  box-shadow: 2px 4px 6px rgba(0,0,0,0.4);
+  z-index: 2;
+}
+
+.discBlack {
+  background: radial-gradient(circle at 30% 30%, #4a4a4a, #111);
+}
+
+.discWhite {
+  background: radial-gradient(circle at 30% 30%, #fff, #b0b0b0);
+}
+
+.status {
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  min-height: 28px;
+}
+
+.playerTurn {
+  color: #ff8787;
+}
+
+.computerTurn {
+  color: #f1f3f5;
+}
+
+.gameOver {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  margin-top: var(--space-2);
+}

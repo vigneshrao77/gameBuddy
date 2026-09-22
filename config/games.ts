@@ -2,6 +2,17 @@ import { GameMeta } from "@/types/game";
 
 export const gamesRegistry: GameMeta[] = [
   {
+    id: "gomoku",
+    name: "Gomoku",
+    description: "Five in a row. Outsmart the computer on a large open grid.",
+    category: "strategy",
+    icon: "Target",
+    route: "/games/gomoku",
+    difficulty: "hard",
+    players: "1",
+    status: "available",
+  },
+  {
     id: "reversi",
     name: "Reversi",
     description: "Classic 8×8 disc-flipping game. Surround the computer's discs to capture them.",
