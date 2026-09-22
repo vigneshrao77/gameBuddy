@@ -5,4 +5,16 @@
   pointer-events: none;
   z-index: 3;
   overflow: hidden;
+
+  /* Feather all edges so the light rays blend seamlessly into the background */
+  -webkit-mask-image: radial-gradient(
+    ellipse 70% 60% at 50% 40%,
+    #000 30%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    ellipse 70% 60% at 50% 40%,
+    #000 30%,
+    transparent 100%
+  );
 }
