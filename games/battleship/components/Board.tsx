@@ -114,7 +114,7 @@ export function Board() {
       )}
       {!isGameOver && (
          <div style={{ marginTop: '16px' }}>
-           <CyberButton onClick={resetGame}>REDEPLOY FLEETS</CyberButton>
+           <CyberButton style={{ width: '15em', letterSpacing: '0.15em' }} onClick={resetGame}>REDEPLOY FLEETS</CyberButton>
          </div>
       )}
     </div>

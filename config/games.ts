@@ -114,7 +114,7 @@ export const gamesRegistry: GameMeta[] = [
   {
     id: "connect-four",
     name: "Connect Four",
-    description: "Drop your coloured discs into the 7×6 grid. Outsmart the AI to connect four discs horizontally, vertically, or diagonally.",
+    description: "Drop your colored discs into the 7-column grid. Plan ahead and block your opponent to connect four discs in a row before they do.",
     category: "strategy",
     icon: "LayoutGrid",
     route: "/games/connect-four",
@@ -125,7 +125,7 @@ export const gamesRegistry: GameMeta[] = [
   {
     id: "checkers",
     name: "Checkers",
-    description: "Move diagonally to capture opponent pieces by jumping over them. Reach the opposite end to crown your pieces as Kings.",
+    description: "Move your pieces diagonally to capture the opponent. Reach the back row to become a King. Forced multi-jumps are mandatory!",
     category: "strategy",
     icon: "LayoutTemplate",
     route: "/games/checkers",
@@ -136,7 +136,7 @@ export const gamesRegistry: GameMeta[] = [
   {
     id: "battleship",
     name: "Battleship",
-    description: "Select grid coordinates to fire upon the enemy fleet. Sink all 5 hidden ships before the computer destroys yours.",
+    description: "Command your naval fleet. Fire torpedoes into enemy waters to hunt down and sink the hidden computer ships before yours are destroyed.",
     category: "strategy",
     icon: "Crosshair",
     route: "/games/battleship",
@@ -147,7 +147,7 @@ export const gamesRegistry: GameMeta[] = [
   {
     id: "reversi",
     name: "Reversi",
-    description: "Place your discs to outflank the opponent. Any enemy discs caught between your new piece and an existing one will flip to your colour.",
+    description: "Trap the computer's discs between your own to flip them to your color. Control the corners and dominate the board by the end of the game.",
     category: "strategy",
     icon: "Disc",
     route: "/games/reversi",
@@ -158,7 +158,7 @@ export const gamesRegistry: GameMeta[] = [
   {
     id: "gomoku",
     name: "Gomoku",
-    description: "Take turns placing pieces on the expansive 15x15 board. The first player to align exactly five pieces in an unbroken row wins.",
+    description: "Place your pieces on intersections. The first to connect exactly five pieces in a row—horizontally, vertically, or diagonally—wins.",
     category: "strategy",
     icon: "Target",
     route: "/games/gomoku",
