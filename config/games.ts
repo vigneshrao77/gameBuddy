@@ -2,6 +2,17 @@ import { GameMeta } from "@/types/game";
 
 export const gamesRegistry: GameMeta[] = [
   {
+    id: "connect-four",
+    name: "Connect Four",
+    description: "Drop discs into the 7×6 grid. First to connect four in a row wins.",
+    category: "strategy",
+    icon: "LayoutGrid",
+    route: "/games/connect-four",
+    difficulty: "medium",
+    players: "1",
+    status: "available",
+  },
+  {
     id: "tic-tac-toe",
     name: "Tic Tac Toe",
     description: "Classic 3×3 grid. Get three in a row to beat the computer — or a friend.",
