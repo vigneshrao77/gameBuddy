@@ -2,6 +2,17 @@ import { GameMeta } from "@/types/game";
 
 export const gamesRegistry: GameMeta[] = [
   {
+    id: "battleship",
+    name: "Battleship",
+    description: "Naval combat game. Guess the coordinates to sink the computer's hidden fleet.",
+    category: "strategy",
+    icon: "Crosshair",
+    route: "/games/battleship",
+    difficulty: "hard",
+    players: "1",
+    status: "available",
+  },
+  {
     id: "checkers",
     name: "Checkers",
     description: "Classic 8×8 board game. Jump your opponent's pieces and get crowned King.",
