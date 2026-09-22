@@ -114,6 +114,71 @@
   --shadow-dark:   rgba(30,16,64,0.12);
 }
 
+/* ---- Light mode: body background ---- */
+[data-theme="light"] body {
+  background-color: #F5F3FF;
+  background-image:
+    radial-gradient(circle at 12% 18%, rgba(139,92,246,0.10) 0%, transparent 36%),
+    radial-gradient(circle at 88% 8%,  rgba(236,72,153,0.07) 0%, transparent 28%),
+    radial-gradient(circle at 50% 55%, rgba(139,92,246,0.06) 0%, transparent 45%),
+    radial-gradient(circle at 5%  92%, rgba(59,130,246,0.07)  0%, transparent 30%),
+    radial-gradient(circle at 95% 85%, rgba(6,182,212,0.05)   0%, transparent 28%),
+    radial-gradient(ellipse at 50% 0%, rgba(139,92,246,0.05) 0%, transparent 60%);
+}
+
+/* ---- Light mode: card inner surface ---- */
+[data-theme="light"] .card2 {
+  background-color: #FFFFFF;
+}
+[data-theme="light"] .card:hover .card2 {
+  background-color: #F5F0FF;
+}
+
+/* ---- Light mode: chips & status badges (were rgba-white, invisible on light bg) ---- */
+[data-theme="light"] .chip {
+  background: rgba(139,92,246,0.07);
+  border-color: rgba(139,92,246,0.15);
+  color: var(--text-secondary);
+}
+[data-theme="light"] .status-badge {
+  background: rgba(139,92,246,0.07);
+  border-color: rgba(139,92,246,0.18);
+  color: var(--text-muted);
+}
+
+/* ---- Light mode: pill active background ---- */
+[data-theme="light"] .pill-active-bg {
+  background: rgba(139,92,246,0.10);
+}
+
+/* ---- Light mode: glass difficulty selector ---- */
+[data-theme="light"] .glass-radio-group {
+  background: rgba(255,255,255,0.70);
+  border-color: rgba(139,92,246,0.20);
+  box-shadow:
+    inset 1px 1px 4px rgba(255,255,255,0.90),
+    inset -1px -1px 6px rgba(139,92,246,0.08),
+    0 4px 16px rgba(139,92,246,0.10);
+}
+[data-theme="light"] .glass-radio-group label {
+  color: var(--text-secondary);
+}
+[data-theme="light"] .glass-radio-group label:hover {
+  color: var(--text-primary);
+}
+[data-theme="light"] .glass-radio-group input:checked + label {
+  color: #ffffff;
+}
+
+/* ---- Light mode: game surface ---- */
+[data-theme="light"] .game-surface {
+  box-shadow: 0 8px 40px -12px rgba(139,92,246,0.18), 0 0 0 1px rgba(139,92,246,0.10);
+}
+[data-theme="light"] .game-note {
+  background: rgba(139,92,246,0.06);
+  border-color: rgba(139,92,246,0.18);
+}
+
 /* ============================================================
    RESET & BASE
    ============================================================ */
