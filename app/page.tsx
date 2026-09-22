@@ -3,6 +3,7 @@ import { GetStartedButton } from '@/components/ui/GetStartedButton';
 import { NeonReveal } from '@/components/ui/NeonReveal';
 import { ShimmerHeadline } from '@/components/ui/ShimmerHeadline';
 import LightRays from '@/components/ui/LightRays';
+import Pyramid from '@/components/ui/Pyramid';
 
 export default function LandingPage() {
   return (
@@ -47,6 +48,20 @@ export default function LandingPage() {
           <ShimmerHeadline className="landing-shimmer" text="Hey, I’m Vignesh — wanna play a game?" />
         </div>
       </NeonReveal>
+
+      <div
+        style={{
+          position: 'absolute',
+          left: '50%',
+          top: '50%',
+          transform: 'translate(-50%, 10%)',
+          pointerEvents: 'none',
+          zIndex: 1,
+        }}
+        aria-hidden="true"
+      >
+        <Pyramid />
+      </div>
 
       <div className="landing-actions">
         <GetStartedButton href="/games" />
