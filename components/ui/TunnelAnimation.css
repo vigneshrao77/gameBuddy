@@ -1,60 +1,206 @@
+/* ============================================================
+   Container — unchanged positioning, fits within token-field
+   ============================================================ */
 .tunnel-container {
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: absolute; /* Changed to absolute to fit within token-field bounds properly */
+  position: absolute;
   inset: 0;
   overflow: visible;
 }
 
+/* ============================================================
+   3D ENERGY VORTEX — the main stage
+   ============================================================ */
 .tunnel-loader {
-  height: 240px; /* Scaled down slightly to fit well in the hero right column */
+  height: 240px;
   width: 240px;
   position: relative;
   display: flex;
+  align-items: center;
+  justify-content: center;
   transform-style: preserve-3d;
-  perspective: 400px;
-  transform: rotateX(60deg);
-  border-radius: 500px;
+  perspective: 600px;
+  border-radius: 0;
 }
 
 @media (min-width: 1024px) {
   .tunnel-loader {
     height: 280px;
     width: 280px;
-    perspective: 500px;
+    perspective: 700px;
   }
 }
 
-.tunnel-loader .tunnel-circle {
-  --distance: 18px; /* Adjusted distance for scaling */
-  --animationEase: ease-in-out;
-  position: absolute;
-  top: calc(var(--index) * var(--distance));
-  bottom: calc(var(--index) * var(--distance));
-  left: calc(var(--index) * var(--distance));
-  right: calc(var(--index) * var(--distance));
-  margin: auto;
-  border: 16px solid var(--color); /* Slightly thinner borders for cleaner look */
-  animation: tunnel-animate var(--animationSpeed) var(--animationEase) infinite;
-  animation-delay: calc(
-    var(--index) * (var(--animationSpeed) / var(--circlesCount))
-  );
-  border-radius: 500px;
-  box-shadow:
-    0px 4px 4px var(--color),
-    0px 4px 8px var(--color) inset,
-    0px 4px 10px var(--color) inset;
+/* The 3D scene that holds all rings — slow rotation + breathing */
+.vortex-scene {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: rotateX(68deg);
+  animation:
+    vortex-rotate 40s linear infinite,
+    vortex-breathe 8s ease-in-out infinite;
 }
 
-@keyframes tunnel-animate {
-  0%,
-  100% {
-    transform: translateZ(0);
+/* ============================================================
+   INDIVIDUAL RINGS — neon ellipses in 3D space
+   ============================================================ */
+.tunnel-circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  transform-style: preserve-3d;
+  /* Size and offset driven by custom properties set in React */
+  width: calc(var(--size) * 1px);
+  height: calc(var(--size) * 1px);
+  margin-top: calc(var(--size) * -0.5px);
+  margin-left: calc(var(--size) * -0.5px);
+  border: var(--thickness) solid transparent;
+  border-color: var(--color);
+  opacity: var(--base-opacity);
+  box-shadow:
+    0 0 6px var(--glow-color),
+    0 0 14px var(--glow-color),
+    inset 0 0 6px var(--glow-color);
+  animation:
+    ring-wave var(--wave-duration) ease-in-out calc(var(--delay) * 1s) infinite,
+    ring-pulse var(--pulse-duration) ease-in-out calc(var(--delay) * 1s) infinite;
+  will-change: transform, opacity;
+}
+
+/* ============================================================
+   CENTER ENERGY CORE
+   ============================================================ */
+.vortex-core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  margin: -9px 0 0 -9px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 40% 40%,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(216, 191, 255, 0.9) 25%,
+    rgba(168, 139, 250, 0.7) 50%,
+    rgba(139, 92, 246, 0.4) 75%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 12px rgba(168, 139, 250, 0.8),
+    0 0 30px rgba(139, 92, 246, 0.5),
+    0 0 60px rgba(139, 92, 246, 0.25);
+  animation: core-pulse 4s ease-in-out infinite;
+  z-index: 10;
+}
+
+.vortex-core::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(196, 181, 253, 0.15) 0%,
+    transparent 70%
+  );
+  animation: core-glow 6s ease-in-out infinite;
+}
+
+/* ============================================================
+   KEYFRAMES
+   ============================================================ */
+
+/* Very slow rotation of the entire vortex — barely noticeable */
+@keyframes vortex-rotate {
+  0%   { transform: rotateX(68deg) rotateZ(0deg); }
+  100% { transform: rotateX(68deg) rotateZ(360deg); }
+}
+
+/* Organic breathing — subtle scale expansion/contraction */
+@keyframes vortex-breathe {
+  0%, 100% { scale: 1; }
+  50%      { scale: 1.04; }
+}
+
+/* Wave traveling through rings — depth + opacity + scale */
+@keyframes ring-wave {
+  0%, 100% {
+    transform: translateZ(0px) scale(1);
+    opacity: var(--base-opacity);
+  }
+  35% {
+    transform: translateZ(calc(var(--depth) * 1px)) scale(var(--scale-peak));
+    opacity: var(--peak-opacity);
+  }
+  65% {
+    transform: translateZ(calc(var(--depth) * -0.5px)) scale(0.97);
+    opacity: calc(var(--base-opacity) * 0.75);
+  }
+}
+
+/* Neon glow pulse — independent of wave for organic feel */
+@keyframes ring-pulse {
+  0%, 100% {
+    filter: brightness(1);
+    box-shadow:
+      0 0 6px var(--glow-color),
+      0 0 14px var(--glow-color),
+      inset 0 0 6px var(--glow-color);
   }
   50% {
-    transform: translateZ(calc(var(--index) * var(--distance) * -1));
+    filter: brightness(1.25);
+    box-shadow:
+      0 0 8px var(--glow-color),
+      0 0 22px var(--glow-color),
+      0 0 40px var(--glow-far),
+      inset 0 0 10px var(--glow-color);
+  }
+}
+
+/* Center core subtle pulse */
+@keyframes core-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow:
+      0 0 12px rgba(168, 139, 250, 0.8),
+      0 0 30px rgba(139, 92, 246, 0.5),
+      0 0 60px rgba(139, 92, 246, 0.25);
+  }
+  50% {
+    transform: scale(1.15);
+    box-shadow:
+      0 0 16px rgba(168, 139, 250, 0.9),
+      0 0 40px rgba(139, 92, 246, 0.65),
+      0 0 80px rgba(139, 92, 246, 0.3);
+  }
+}
+
+/* Core outer glow breathing */
+@keyframes core-glow {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50%      { opacity: 1;   transform: scale(1.3); }
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .vortex-scene {
+    animation: none;
+  }
+  .tunnel-circle {
+    animation: none;
+  }
+  .vortex-core,
+  .vortex-core::after {
+    animation: none;
   }
 }
