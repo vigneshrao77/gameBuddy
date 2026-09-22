@@ -1,80 +1,146 @@
-import React from 'react';
+import React from "react";
 
-/* ── Ring configuration ────────────────────────────────────────
-   24 concentric rings, each with computed size, color, opacity,
-   glow intensity, animation delay, and depth parameters.
-   Everything is driven by CSS custom properties.
+/* ============================================================
+   3D PURPLE ENERGY VORTEX
+   ------------------------------------------------------------
+   Same animation concept:
+   - 24 concentric rings
+   - 3D perspective
+   - purple neon tunnel
+   - traveling wave
+   - central energy core
 
-   Key changes from the original:
-   - Color now drifts across three hues (indigo → violet → cyan)
-     instead of a single hue ramping in lightness, so the tunnel
-     reads as an energy gradient rather than "purple, but dimmer."
-   - Easing uses a custom cubic-bezier with slight overshoot
-     instead of ease-in-out everywhere, so the wave feels like it's
-     being pulled rather than mechanically tweened.
-   - Glow is built from a blurred duplicate layer (real bloom) in
-     addition to box-shadow, which is the difference between
-     "circle with a shadow" and "circle that's actually glowing."
-   - The core is now three layered pieces (hot center, rotating
-     specular highlight, soft halo) so it reads as the light SOURCE
-     the rings are being pulled toward, not just another ring.
-   - Rings closer to the viewer blur slightly less than rings far
-     away is reversed on purpose — the FAR rings get a touch of
-     blur to simulate depth of field, which is what actually sells
-     "tunnel" over "flat stacked circles."
-──────────────────────────────────────────────────────────────── */
+   This is a visual animation, NOT a loading indicator.
+============================================================ */
 
 const RING_COUNT = 24;
 
 const rings = Array.from({ length: RING_COUNT }, (_, i) => {
-  const t = i / (RING_COUNT - 1); // 0 → 1, inner → outer
+  const t = i / (RING_COUNT - 1);
 
-  const size = 26 + t * 210;
-  const thickness = Math.max(1, 3.2 - t * 2.4);
+  /*
+    Ring size
+    Inner → Outer
+  */
+  const size = 30 + t * 208;
 
-  // Three-stop hue drift: hot indigo core → violet mid → cool cyan rim.
-  // This is what makes the tunnel feel like it has depth-coded energy
-  // rather than one hue just getting darker as it recedes.
-  const hue = t < 0.5
-    ? 255 + (t / 0.5) * 30      // 255 → 285 (indigo → violet)
-    : 285 + ((t - 0.5) / 0.5) * 100; // 285 → 385 (violet → cyan, wraps past 360)
-  const sat = 85 - t * 20;
-  const lit = 68 - t * 30;
+  /*
+    Inner rings are slightly thicker.
+    Outer rings become thinner.
+  */
+  const thickness = 3.4 - t * 2.25;
 
-  const baseOpacity = 0.92 - t * 0.55;
-  const peakOpacity = Math.min(1, baseOpacity + 0.25);
+  /*
+    Purple → violet → soft magenta.
+    Kept within a controlled purple palette.
+  */
+  const hue =
+    t < 0.65
+      ? 262 + t * 32
+      : 283 + (t - 0.65) * 25;
 
-  const glowAlpha = 0.65 - t * 0.4;
-  const glowFarAlpha = glowAlpha * 0.35;
+  const saturation = 92 - t * 16;
+  const lightness = 70 - t * 25;
 
-  const delay = i * 0.13;
-  const waveDuration = 5.5 + t * 3.5;
-  const pulseDuration = 3.6 + (1 - t) * 3;
+  /*
+    Inner rings = stronger.
+    Outer rings = softer.
+  */
+  const baseOpacity = 0.96 - t * 0.56;
+  const peakOpacity = Math.min(1, baseOpacity + 0.2);
 
-  const depth = 16 + (1 - t) * 28;
-  const scalePeak = 1 + (1 - t) * 0.07;
+  /*
+    Glow hierarchy.
+  */
+  const glowAlpha = 0.68 - t * 0.43;
+  const farGlowAlpha = glowAlpha * 0.28;
 
-  // Rings further from the eye pick up a touch of blur — cheap,
-  // convincing depth-of-field cue that a flat opacity ramp can't fake.
-  const dofBlur = t > 0.55 ? (t - 0.55) * 2.2 : 0;
+  /*
+    Wave timing.
+    Outer rings move slightly slower.
+  */
+  const delay = i * 0.115;
+  const waveDuration = 5.8 + t * 2.8;
+
+  /*
+    Pulse is slightly slower than the wave.
+  */
+  const pulseDuration = 4.2 + t * 1.8;
+
+  /*
+    Depth.
+    Inner rings have more depth movement.
+  */
+  const depth = 14 + (1 - t) * 34;
+
+  /*
+    Subtle scale change.
+  */
+  const scalePeak = 1 + (1 - t) * 0.055;
+
+  /*
+    Depth of field.
+    Only the far outer rings receive blur.
+  */
+  const dofBlur =
+    t > 0.58
+      ? (t - 0.58) * 1.7
+      : 0;
+
+  /*
+    Proportional vertical movement.
+  */
+  const bounceUp = 7 + t * 14;
+  const bounceDown = 4 + t * 9;
 
   return {
     index: i,
+
     style: {
-      '--size': size,
-      '--thickness': `${thickness}px`,
-      '--color': `hsl(${hue % 360}, ${sat}%, ${lit}%)`,
-      '--glow-color': `hsla(${hue % 360}, ${sat}%, ${lit + 12}%, ${glowAlpha})`,
-      '--glow-far': `hsla(${hue % 360}, ${sat}%, ${lit + 12}%, ${glowFarAlpha})`,
-      '--base-opacity': baseOpacity,
-      '--peak-opacity': peakOpacity,
-      '--delay': delay,
-      '--wave-duration': `${waveDuration}s`,
-      '--pulse-duration': `${pulseDuration}s`,
-      '--depth': depth,
-      '--scale-peak': scalePeak,
-      '--dof-blur': `${dofBlur}px`,
-    },
+      "--size": `${size}px`,
+      "--thickness": `${Math.max(1, thickness)}px`,
+
+      "--color": `
+        hsl(
+          ${hue % 360},
+          ${saturation}%,
+          ${lightness}%
+        )
+      `,
+
+      "--glow-color": `
+        hsla(
+          ${hue % 360},
+          ${saturation}%,
+          ${Math.min(lightness + 14, 95)}%,
+          ${glowAlpha}
+        )
+      `,
+
+      "--glow-far": `
+        hsla(
+          ${hue % 360},
+          ${saturation}%,
+          ${Math.min(lightness + 14, 95)}%,
+          ${farGlowAlpha}
+        )
+      `,
+
+      "--base-opacity": baseOpacity,
+      "--peak-opacity": peakOpacity,
+
+      "--delay": `${delay}s`,
+      "--wave-duration": `${waveDuration}s`,
+      "--pulse-duration": `${pulseDuration}s`,
+
+      "--depth": `${depth}px`,
+      "--scale-peak": scalePeak,
+
+      "--dof-blur": `${dofBlur}px`,
+
+      "--bounce-up": `${bounceUp}px`,
+      "--bounce-down": `${bounceDown}px`,
+    } as React.CSSProperties,
   };
 });
 
@@ -84,229 +150,653 @@ export const TunnelAnimation = () => {
       <div className="tunnel-container">
         <div className="tunnel-loader">
           <div className="vortex-scene">
+
+            {/* =================================================
+                RINGS
+            ================================================= */}
+
             {rings.map((ring) => (
-              <div key={ring.index} className="tunnel-circle" style={ring.style as React.CSSProperties}>
-                <div className="tunnel-circle-bloom" />
+              <div
+                key={ring.index}
+                className="tunnel-circle"
+                style={ring.style}
+              >
+                <div className="tunnel-circle-glow" />
+                <div className="tunnel-circle-highlight" />
               </div>
             ))}
+
+            {/* =================================================
+                CENTRAL ENERGY CORE
+            ================================================= */}
+
             <div className="vortex-core">
+              <div className="core-outer-glow" />
+              <div className="core-halo" />
               <div className="core-hot" />
               <div className="core-specular" />
-              <div className="core-halo" />
+              <div className="core-center" />
             </div>
+
           </div>
         </div>
       </div>
 
-      <style dangerouslySetInnerHTML={{ __html: `
-        .tunnel-container {
-          width: 100%;
-          height: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          position: absolute;
-          inset: 0;
-          overflow: visible;
-        }
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
 
-        .tunnel-loader {
-          height: 240px;
-          width: 240px;
-          position: relative;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transform-style: preserve-3d;
-          perspective: 620px;
-        }
+/* ============================================================
+   CONTAINER
+============================================================ */
 
-        @media (min-width: 1024px) {
-          .tunnel-loader {
-            height: 280px;
-            width: 280px;
-            perspective: 720px;
-          }
-        }
+.tunnel-container {
+  position: absolute;
+  inset: 0;
 
-        .vortex-scene {
-          position: relative;
-          width: 100%;
-          height: 100%;
-          transform-style: preserve-3d;
-          transform: rotateX(68deg);
-          animation:
-            vortex-breathe 7s cubic-bezier(0.45, 0, 0.55, 1) infinite,
-            vortex-wobble 11s ease-in-out infinite;
-        }
+  width: 100%;
+  height: 100%;
 
-        .tunnel-circle {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          border-radius: 50%;
-          transform-style: preserve-3d;
-          width: calc(var(--size) * 1px);
-          height: calc(var(--size) * 1px);
-          margin-top: calc(var(--size) * -0.5px);
-          margin-left: calc(var(--size) * -0.5px);
-          border: var(--thickness) solid transparent;
-          border-color: var(--color);
-          opacity: var(--base-opacity);
-          filter: blur(var(--dof-blur));
-          box-shadow:
-            0 0 6px var(--glow-color),
-            0 0 14px var(--glow-color),
-            inset 0 0 6px var(--glow-color);
-          animation:
-            ring-wave var(--wave-duration) cubic-bezier(0.37, 0, 0.63, 1) calc(var(--delay) * 1s) infinite,
-            ring-pulse var(--pulse-duration) ease-in-out calc(var(--delay) * 1s) infinite;
-          will-change: transform, opacity;
-        }
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-        /* Real bloom: a blurred, slightly larger copy of the ring sitting
-           behind it. Box-shadow alone reads as "outline with a shadow";
-           this reads as "glowing." */
-        .tunnel-circle-bloom {
-          position: absolute;
-          inset: -40%;
-          border-radius: 50%;
-          border: calc(var(--thickness) * 2) solid var(--glow-color);
-          filter: blur(8px);
-          opacity: 0.55;
-          pointer-events: none;
-        }
+  overflow: visible;
 
-        .vortex-core {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: 20px;
-          height: 20px;
-          margin: -10px 0 0 -10px;
-          z-index: 10;
-        }
+  pointer-events: none;
+}
 
-        .core-hot {
-          position: absolute;
-          inset: 0;
-          border-radius: 50%;
-          background: radial-gradient(
-            circle at 42% 38%,
-            #ffffff 0%,
-            #e7dcff 22%,
-            #b79dfb 45%,
-            #7c5cf0 70%,
-            transparent 100%
-          );
-          box-shadow:
-            0 0 14px rgba(184, 157, 251, 0.9),
-            0 0 34px rgba(124, 92, 240, 0.55),
-            0 0 68px rgba(94, 60, 220, 0.3);
-          animation: core-pulse 3.4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
-        }
 
-        /* A thin rotating arc of brightness across the core so it reads
-           as a spinning point of light rather than a static glow blob. */
-        .core-specular {
-          position: absolute;
-          inset: -3px;
-          border-radius: 50%;
-          background: conic-gradient(
-            from 0deg,
-            transparent 0deg,
-            rgba(255, 255, 255, 0.9) 12deg,
-            transparent 45deg,
-            transparent 360deg
-          );
-          mix-blend-mode: screen;
-          animation: core-spin 2.6s linear infinite;
-        }
+/* ============================================================
+   MAIN 3D SPACE
+============================================================ */
 
-        .core-halo {
-          position: absolute;
-          inset: -22px;
-          border-radius: 50%;
-          background: radial-gradient(
-            circle,
-            rgba(199, 178, 255, 0.18) 0%,
-            rgba(139, 92, 246, 0.08) 45%,
-            transparent 75%
-          );
-          animation: core-glow 5.5s ease-in-out infinite;
-        }
+.tunnel-loader {
+  position: relative;
 
-        @keyframes vortex-rotate {
-          0%   { rotate: z 0deg; }
-          100% { rotate: z 360deg; }
-        }
+  width: 240px;
+  height: 240px;
 
-        @keyframes vortex-breathe {
-          0%, 100% { scale: 1; }
-          50%      { scale: 1.045; }
-        }
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-        /* Subtle non-repeating-feeling tilt drift so the tunnel doesn't
-           look like it's on a mechanical turntable. */
-        @keyframes vortex-wobble {
-          0%, 100% { transform: rotateX(68deg) rotateY(0deg); }
-          50%      { transform: rotateX(70.5deg) rotateY(2deg); }
-        }
+  perspective: 680px;
 
-        @keyframes ring-wave {
-          0%, 100% {
-            transform: translateZ(0px) translateY(0px) scale(1);
-            opacity: var(--base-opacity);
-          }
-          35% {
-            transform: translateZ(calc(var(--depth) * 1px)) translateY(-18px) scale(var(--scale-peak));
-            opacity: var(--peak-opacity);
-          }
-          65% {
-            transform: translateZ(calc(var(--depth) * -0.5px)) translateY(14px) scale(0.97);
-            opacity: calc(var(--base-opacity) * 0.7);
-          }
-        }
+  transform-style: preserve-3d;
+}
 
-        @keyframes ring-pulse {
-          0%, 100% {
-            filter: brightness(1) blur(var(--dof-blur));
-            box-shadow:
-              0 0 6px var(--glow-color),
-              0 0 14px var(--glow-color),
-              inset 0 0 6px var(--glow-color);
-          }
-          50% {
-            filter: brightness(1.3) blur(var(--dof-blur));
-            box-shadow:
-              0 0 9px var(--glow-color),
-              0 0 24px var(--glow-color),
-              0 0 44px var(--glow-far),
-              inset 0 0 11px var(--glow-color);
-          }
-        }
 
-        @keyframes core-pulse {
-          0%, 100% { transform: scale(1); }
-          50%      { transform: scale(1.18); }
-        }
+@media (min-width: 1024px) {
 
-        @keyframes core-spin {
-          0%   { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
+  .tunnel-loader {
+    width: 280px;
+    height: 280px;
 
-        @keyframes core-glow {
-          0%, 100% { opacity: 0.6; transform: scale(1); }
-          50%      { opacity: 1;   transform: scale(1.35); }
-        }
+    perspective: 760px;
+  }
 
-        @media (prefers-reduced-motion: reduce) {
-          .vortex-scene, .tunnel-circle, .core-hot, .core-specular, .core-halo {
-            animation: none;
-          }
-        }
-      `}} />
+}
+
+
+/* ============================================================
+   VORTEX
+============================================================ */
+
+.vortex-scene {
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+
+  transform-style: preserve-3d;
+
+  transform:
+    rotateX(68deg)
+    rotateY(0deg)
+    rotateZ(0deg);
+
+  animation:
+    vortex-breathe 8s
+      cubic-bezier(.45, 0, .55, 1)
+      infinite,
+
+    vortex-wobble 13s
+      cubic-bezier(.45, 0, .55, 1)
+      infinite;
+
+  will-change: transform;
+}
+
+
+/* ============================================================
+   RING
+============================================================ */
+
+.tunnel-circle {
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  width: var(--size);
+  height: var(--size);
+
+  margin-top: calc(var(--size) * -0.5);
+  margin-left: calc(var(--size) * -0.5);
+
+  border-radius: 50%;
+
+  border:
+    var(--thickness)
+    solid
+    var(--color);
+
+  background: transparent;
+
+  transform-style: preserve-3d;
+
+  opacity: var(--base-opacity);
+
+  filter:
+    blur(var(--dof-blur))
+    brightness(1);
+
+  box-shadow:
+    0 0 5px var(--glow-color),
+    0 0 12px var(--glow-color),
+    inset 0 0 5px var(--glow-color);
+
+  animation:
+    ring-wave
+      var(--wave-duration)
+      cubic-bezier(.37, 0, .63, 1)
+      var(--delay)
+      infinite,
+
+    ring-light
+      var(--pulse-duration)
+      cubic-bezier(.45, 0, .55, 1)
+      var(--delay)
+      infinite;
+
+  will-change:
+    transform,
+    opacity,
+    filter;
+}
+
+
+/* ============================================================
+   SOFT ATMOSPHERIC GLOW
+============================================================ */
+
+.tunnel-circle-glow {
+  position: absolute;
+
+  inset: -42%;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      var(--glow-color) 0%,
+      var(--glow-far) 28%,
+      transparent 68%
+    );
+
+  opacity: 0.36;
+
+  filter: blur(11px);
+
+  pointer-events: none;
+}
+
+
+/* ============================================================
+   SMALL RING HIGHLIGHT
+============================================================ */
+
+.tunnel-circle-highlight {
+  position: absolute;
+
+  inset: 5%;
+
+  border-radius: 50%;
+
+  border:
+    1px solid
+    rgba(235, 215, 255, 0.14);
+
+  opacity: 0.5;
+
+  box-shadow:
+    inset 0 0 8px
+    rgba(220, 190, 255, 0.18);
+
+  pointer-events: none;
+}
+
+
+/* ============================================================
+   CENTRAL CORE
+============================================================ */
+
+.vortex-core {
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  width: 24px;
+  height: 24px;
+
+  margin:
+    -12px
+    0
+    0
+    -12px;
+
+  transform-style: preserve-3d;
+
+  z-index: 50;
+}
+
+
+/* ============================================================
+   OUTER CORE GLOW
+============================================================ */
+
+.core-outer-glow {
+  position: absolute;
+
+  inset: -34px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(168, 105, 255, 0.25),
+      rgba(119, 55, 230, 0.1) 42%,
+      transparent 72%
+    );
+
+  filter: blur(9px);
+
+  animation:
+    core-atmosphere 5s
+    ease-in-out
+    infinite;
+}
+
+
+/* ============================================================
+   CORE HALO
+============================================================ */
+
+.core-halo {
+  position: absolute;
+
+  inset: -15px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(215, 190, 255, 0.28) 0%,
+      rgba(142, 87, 245, 0.14) 35%,
+      transparent 72%
+    );
+
+  filter: blur(4px);
+
+  animation:
+    core-halo-pulse
+    4.5s
+    cubic-bezier(.45, 0, .55, 1)
+    infinite;
+}
+
+
+/* ============================================================
+   CORE HOT CENTER
+============================================================ */
+
+.core-hot {
+  position: absolute;
+
+  inset: 0;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle at 38% 34%,
+      #ffffff 0%,
+      #f1eaff 18%,
+      #d0bcff 38%,
+      #9d72ff 62%,
+      #6e3ce5 82%,
+      transparent 100%
+    );
+
+  box-shadow:
+    0 0 8px rgba(255, 245, 255, 0.9),
+    0 0 18px rgba(190, 145, 255, 0.85),
+    0 0 38px rgba(128, 65, 235, 0.65),
+    0 0 70px rgba(94, 44, 210, 0.35);
+
+  animation:
+    core-pulse
+    3.8s
+    cubic-bezier(.45, 0, .55, 1)
+    infinite;
+}
+
+
+/* ============================================================
+   SPECULAR LIGHT
+============================================================ */
+
+.core-specular {
+  position: absolute;
+
+  inset: -2px;
+
+  border-radius: 50%;
+
+  background:
+    conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      rgba(255,255,255,.85) 14deg,
+      transparent 42deg,
+      transparent 360deg
+    );
+
+  mix-blend-mode: screen;
+
+  opacity: 0.7;
+
+  animation:
+    core-spin
+    3.8s
+    linear
+    infinite;
+}
+
+
+/* ============================================================
+   CENTER POINT
+============================================================ */
+
+.core-center {
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  width: 5px;
+  height: 5px;
+
+  transform:
+    translate(-50%, -50%);
+
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 0 5px #ffffff,
+    0 0 12px #d7baff,
+    0 0 20px #9c65ff;
+}
+
+
+/* ============================================================
+   VORTEX BREATHING
+============================================================ */
+
+@keyframes vortex-breathe {
+
+  0%,
+  100% {
+    transform:
+      rotateX(68deg)
+      rotateY(0deg)
+      scale(1);
+  }
+
+  50% {
+    transform:
+      rotateX(69.5deg)
+      rotateY(1deg)
+      scale(1.035);
+  }
+
+}
+
+
+/* ============================================================
+   VERY SLOW 3D WOBBLE
+============================================================ */
+
+@keyframes vortex-wobble {
+
+  0%,
+  100% {
+    transform:
+      rotateX(68deg)
+      rotateY(-0.5deg)
+      rotateZ(-0.4deg);
+  }
+
+  50% {
+    transform:
+      rotateX(70deg)
+      rotateY(1.5deg)
+      rotateZ(0.4deg);
+  }
+
+}
+
+
+/* ============================================================
+   RING TRAVELING WAVE
+============================================================ */
+
+@keyframes ring-wave {
+
+  0%,
+  100% {
+
+    transform:
+      translateZ(0)
+      translateY(0)
+      scale(1);
+
+    opacity:
+      var(--base-opacity);
+  }
+
+
+  28% {
+
+    transform:
+      translateZ(var(--depth))
+      translateY(
+        calc(var(--bounce-up) * -1)
+      )
+      scale(var(--scale-peak));
+
+    opacity:
+      var(--peak-opacity);
+  }
+
+
+  42% {
+
+    transform:
+      translateZ(
+        calc(var(--depth) * 0.7)
+      )
+      translateY(
+        calc(var(--bounce-up) * -0.6)
+      )
+      scale(
+        calc(var(--scale-peak) * 0.99)
+      );
+
+  }
+
+
+  67% {
+
+    transform:
+      translateZ(
+        calc(var(--depth) * -0.38)
+      )
+      translateY(var(--bounce-down))
+      scale(0.975);
+
+    opacity:
+      calc(var(--base-opacity) * 0.72);
+  }
+
+}
+
+
+/* ============================================================
+   RING LIGHT / GLOW
+============================================================ */
+
+@keyframes ring-light {
+
+  0%,
+  100% {
+
+    filter:
+      brightness(1)
+      blur(var(--dof-blur));
+
+    box-shadow:
+      0 0 5px var(--glow-color),
+      0 0 12px var(--glow-color),
+      inset 0 0 5px var(--glow-color);
+  }
+
+
+  30% {
+
+    filter:
+      brightness(1.28)
+      blur(var(--dof-blur));
+
+    box-shadow:
+      0 0 8px var(--glow-color),
+      0 0 18px var(--glow-color),
+      0 0 34px var(--glow-far),
+      inset 0 0 9px var(--glow-color);
+  }
+
+
+  52% {
+
+    filter:
+      brightness(1.08)
+      blur(var(--dof-blur));
+  }
+
+}
+
+
+/* ============================================================
+   CORE ANIMATION
+============================================================ */
+
+@keyframes core-pulse {
+
+  0%,
+  100% {
+    transform: scale(0.92);
+  }
+
+  50% {
+    transform: scale(1.16);
+  }
+
+}
+
+
+@keyframes core-spin {
+
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+
+}
+
+
+@keyframes core-atmosphere {
+
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.95);
+  }
+
+  50% {
+    opacity: 0.9;
+    transform: scale(1.18);
+  }
+
+}
+
+
+@keyframes core-halo-pulse {
+
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.9);
+  }
+
+  50% {
+    opacity: 0.95;
+    transform: scale(1.25);
+  }
+
+}
+
+
+/* ============================================================
+   ACCESSIBILITY
+============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .vortex-scene,
+  .tunnel-circle,
+  .core-hot,
+  .core-specular,
+  .core-halo,
+  .core-outer-glow {
+
+    animation: none !important;
+  }
+
+}
+
+          `,
+        }}
+      />
     </>
   );
 };
