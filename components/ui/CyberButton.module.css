@@ -2,10 +2,8 @@
 
 .cyberButton {
   position: relative;
-  width: max-content;
-  min-width: 11em;
+  width: 11em;
   height: 4em;
-  padding: 0 2em;
   outline: none;
   transition: 0.15s ease-out;
   background-color: rgba(8, 8, 10, 0.5);
@@ -21,9 +19,11 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  padding: 0;
   margin: 0;
   user-select: none;
   border-radius: 4px;
+  /* The octagon frame is a fixed 11em x 4em, so labels must stay on one line. */
   white-space: nowrap;
 }
 
@@ -31,6 +31,8 @@
   transform: scale(0.96);
 }
 
+/* Every dimension below is in em, so the card-sized variant only needs a
+   smaller font-size for the frame, corners and arrows to scale with it. */
 .small {
   font-size: 9px;
 }
@@ -52,8 +54,8 @@
   height: 100%;
   border: 5px double var(--color);
   box-shadow: inset 0px 0px 16px rgba(139, 92, 246, 0.45);
-  -webkit-clip-path: polygon(1.2em 0, calc(100% - 1.2em) 0, 100% 1.2em, 100% calc(100% - 1.2em), calc(100% - 1.2em) 100%, 1.2em 100%, 0 calc(100% - 1.2em), 0 1.2em);
-  clip-path: polygon(1.2em 0, calc(100% - 1.2em) 0, 100% 1.2em, 100% calc(100% - 1.2em), calc(100% - 1.2em) 100%, 1.2em 100%, 0 calc(100% - 1.2em), 0 1.2em);
+  -webkit-clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+  clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   pointer-events: none;
 }
@@ -63,13 +65,13 @@
   transition: 0.2s ease;
   background-color: #8B5CF6;
   top: 35%;
-  width: 1.2em;
+  width: 11%;
   height: 30%;
   pointer-events: none;
 }
 
 .leftArrow {
-  left: -1.5em;
+  left: -13.5%;
   -webkit-clip-path: polygon(100% 0, 100% 100%, 0 50%);
   clip-path: polygon(100% 0, 100% 100%, 0 50%);
 }
@@ -77,28 +79,39 @@
 .rightArrow {
   -webkit-clip-path: polygon(100% 49%, 0 0, 0 100%);
   clip-path: polygon(100% 49%, 0 0, 0 100%);
-  right: -1.5em;
-  left: auto;
+  left: 102%;
 }
 
-.cyberButton:hover .label,
+/* The card variant is not hoverable on its own — the surrounding card link is
+   the hit target, so card hover drives the same animation. */
+.cyberButton:hover .label {
+  color: #FFFFFF;
+  text-shadow: 0 0 10px rgba(236, 72, 153, 0.7);
+}
 :global(.card.available):hover .label {
   color: #FFFFFF;
   text-shadow: 0 0 10px rgba(236, 72, 153, 0.7);
 }
 
-.cyberButton:hover .rightArrow,
+.cyberButton:hover .rightArrow {
+  background-color: #EC4899;
+  left: -15%;
+  animation: 0.6s ease-in-out both infinite alternate rightArrowAnim;
+}
 :global(.card.available):hover .rightArrow {
   background-color: #EC4899;
-  right: -2em;
-  left: auto;
+  left: -15%;
   animation: 0.6s ease-in-out both infinite alternate rightArrowAnim;
 }
 
-.cyberButton:hover .leftArrow,
+.cyberButton:hover .leftArrow {
+  background-color: #EC4899;
+  left: 103%;
+  animation: 0.6s ease-in-out both infinite alternate leftArrowAnim;
+}
 :global(.card.available):hover .leftArrow {
   background-color: #EC4899;
-  left: -2em;
+  left: 103%;
   animation: 0.6s ease-in-out both infinite alternate leftArrowAnim;
 }
 
@@ -115,8 +128,7 @@
 
 .rightTop {
   top: -1.98em;
-  right: -3.0em;
-  left: auto;
+  left: 91%;
 }
 
 .leftTop {
@@ -130,67 +142,95 @@
 }
 
 .rightBottom {
-  top: 2.10em;
-  right: -2.15em;
-  left: auto;
+  top: 45%;
+  left: 88%;
 }
 
-.cyberButton:hover .leftTop,
+.cyberButton:hover .leftTop {
+  animation: 0.1s ease-in-out 0.05s both changeColorNeon, 0.2s linear 0.4s both lightEffectNeon;
+}
 :global(.card.available):hover .leftTop {
-  animation: 0.1s ease-in-out 0.05s both changeColorNeon,
-    0.2s linear 0.4s both lightEffectNeon;
+  animation: 0.1s ease-in-out 0.05s both changeColorNeon, 0.2s linear 0.4s both lightEffectNeon;
 }
 
-.cyberButton:hover .rightTop,
+.cyberButton:hover .rightTop {
+  animation: 0.1s ease-in-out 0.15s both changeColorNeon, 0.2s linear 0.4s both lightEffectNeon;
+}
 :global(.card.available):hover .rightTop {
-  animation: 0.1s ease-in-out 0.15s both changeColorNeon,
-    0.2s linear 0.4s both lightEffectNeon;
+  animation: 0.1s ease-in-out 0.15s both changeColorNeon, 0.2s linear 0.4s both lightEffectNeon;
 }
 
-.cyberButton:hover .rightBottom,
+.cyberButton:hover .rightBottom {
+  animation: 0.1s ease-in-out 0.25s both changeColorNeon, 0.2s linear 0.4s both lightEffectNeon;
+}
 :global(.card.available):hover .rightBottom {
-  animation: 0.1s ease-in-out 0.25s both changeColorNeon,
-    0.2s linear 0.4s both lightEffectNeon;
+  animation: 0.1s ease-in-out 0.25s both changeColorNeon, 0.2s linear 0.4s both lightEffectNeon;
 }
 
-.cyberButton:hover .leftBottom,
+.cyberButton:hover .leftBottom {
+  animation: 0.1s ease-in-out 0.35s both changeColorNeon, 0.2s linear 0.4s both lightEffectNeon;
+}
 :global(.card.available):hover .leftBottom {
-  animation: 0.1s ease-in-out 0.35s both changeColorNeon,
-    0.2s linear 0.4s both lightEffectNeon;
+  animation: 0.1s ease-in-out 0.35s both changeColorNeon, 0.2s linear 0.4s both lightEffectNeon;
 }
 
-.cyberButton:hover .corner,
+.cyberButton:hover .corner {
+  transform: scale(1.25) rotate(45deg);
+}
 :global(.card.available):hover .corner {
   transform: scale(1.25) rotate(45deg);
 }
 
-.cyberButton:hover .clip,
+.cyberButton:hover .clip {
+  animation: 0.2s ease-in-out 0.55s both glowNeon;
+  --color: #EC4899;
+}
 :global(.card.available):hover .clip {
   animation: 0.2s ease-in-out 0.55s both glowNeon;
   --color: #EC4899;
 }
 
 @keyframes changeColorNeon {
-  from { background-color: #8B5CF6; }
-  to { background-color: #EC4899; }
+  from {
+    background-color: #8B5CF6;
+  }
+  to {
+    background-color: #EC4899;
+  }
 }
 
 @keyframes lightEffectNeon {
-  from { box-shadow: 1px 1px 6px #EC4899; }
-  to { box-shadow: 0 0 3px #F472B6; }
+  from {
+    box-shadow: 1px 1px 6px #EC4899;
+  }
+  to {
+    box-shadow: 0 0 3px #F472B6;
+  }
 }
 
 @keyframes glowNeon {
-  from { box-shadow: inset 0px 0px 16px rgba(139, 92, 246, 0.45); }
-  to { box-shadow: inset 0px 0px 32px #EC4899, 0 0 16px rgba(236, 72, 153, 0.35); }
+  from {
+    box-shadow: inset 0px 0px 16px rgba(139, 92, 246, 0.45);
+  }
+  to {
+    box-shadow: inset 0px 0px 32px #EC4899, 0 0 16px rgba(236, 72, 153, 0.35);
+  }
 }
 
 @keyframes leftArrowAnim {
-  from { transform: translateX(0px); }
-  to { transform: translateX(-6px); }
+  from {
+    transform: translate(0px);
+  }
+  to {
+    transform: translateX(10px);
+  }
 }
 
 @keyframes rightArrowAnim {
-  from { transform: translateX(0px); }
-  to { transform: translateX(6px); }
+  from {
+    transform: translate(0px);
+  }
+  to {
+    transform: translateX(-10px);
+  }
 }
