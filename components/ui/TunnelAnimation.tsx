@@ -136,7 +136,6 @@ export const TunnelAnimation = () => {
           transform-style: preserve-3d;
           transform: rotateX(68deg);
           animation:
-            vortex-rotate 36s linear infinite,
             vortex-breathe 7s cubic-bezier(0.45, 0, 0.55, 1) infinite,
             vortex-wobble 11s ease-in-out infinite;
         }
