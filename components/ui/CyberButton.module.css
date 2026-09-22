@@ -2,8 +2,10 @@
 
 .cyberButton {
   position: relative;
-  width: 11em;
+  width: max-content;
+  min-width: 11em;
   height: 4em;
+  padding: 0 2em;
   outline: none;
   transition: 0.15s ease-out;
   background-color: rgba(8, 8, 10, 0.5);
@@ -19,11 +21,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
   margin: 0;
   user-select: none;
   border-radius: 4px;
-  /* The octagon frame is a fixed 11em x 4em, so labels must stay on one line. */
   white-space: nowrap;
 }
 
@@ -31,8 +31,6 @@
   transform: scale(0.96);
 }
 
-/* Every dimension below is in em, so the card-sized variant only needs a
-   smaller font-size for the frame, corners and arrows to scale with it. */
 .small {
   font-size: 9px;
 }
@@ -54,8 +52,8 @@
   height: 100%;
   border: 5px double var(--color);
   box-shadow: inset 0px 0px 16px rgba(139, 92, 246, 0.45);
-  -webkit-clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
-  clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+  -webkit-clip-path: polygon(1.2em 0, calc(100% - 1.2em) 0, 100% 1.2em, 100% calc(100% - 1.2em), calc(100% - 1.2em) 100%, 1.2em 100%, 0 calc(100% - 1.2em), 0 1.2em);
+  clip-path: polygon(1.2em 0, calc(100% - 1.2em) 0, 100% 1.2em, 100% calc(100% - 1.2em), calc(100% - 1.2em) 100%, 1.2em 100%, 0 calc(100% - 1.2em), 0 1.2em);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   pointer-events: none;
 }
@@ -65,13 +63,13 @@
   transition: 0.2s ease;
   background-color: #8B5CF6;
   top: 35%;
-  width: 11%;
+  width: 1.2em;
   height: 30%;
   pointer-events: none;
 }
 
 .leftArrow {
-  left: -13.5%;
+  left: -1.5em;
   -webkit-clip-path: polygon(100% 0, 100% 100%, 0 50%);
   clip-path: polygon(100% 0, 100% 100%, 0 50%);
 }
@@ -79,11 +77,10 @@
 .rightArrow {
   -webkit-clip-path: polygon(100% 49%, 0 0, 0 100%);
   clip-path: polygon(100% 49%, 0 0, 0 100%);
-  left: 102%;
+  right: -1.5em;
+  left: auto;
 }
 
-/* The card variant is not hoverable on its own — the surrounding card link is
-   the hit target, so card hover drives the same animation. */
 .cyberButton:hover .label,
 :global(.card.available):hover .label {
   color: #FFFFFF;
@@ -93,14 +90,15 @@
 .cyberButton:hover .rightArrow,
 :global(.card.available):hover .rightArrow {
   background-color: #EC4899;
-  left: -15%;
+  right: -2em;
+  left: auto;
   animation: 0.6s ease-in-out both infinite alternate rightArrowAnim;
 }
 
 .cyberButton:hover .leftArrow,
 :global(.card.available):hover .leftArrow {
   background-color: #EC4899;
-  left: 103%;
+  left: -2em;
   animation: 0.6s ease-in-out both infinite alternate leftArrowAnim;
 }
 
@@ -117,7 +115,8 @@
 
 .rightTop {
   top: -1.98em;
-  left: 91%;
+  right: -3.0em;
+  left: auto;
 }
 
 .leftTop {
@@ -131,8 +130,9 @@
 }
 
 .rightBottom {
-  top: 45%;
-  left: 88%;
+  top: 2.10em;
+  right: -2.15em;
+  left: auto;
 }
 
 .cyberButton:hover .leftTop,
@@ -171,46 +171,26 @@
 }
 
 @keyframes changeColorNeon {
-  from {
-    background-color: #8B5CF6;
-  }
-  to {
-    background-color: #EC4899;
-  }
+  from { background-color: #8B5CF6; }
+  to { background-color: #EC4899; }
 }
 
 @keyframes lightEffectNeon {
-  from {
-    box-shadow: 1px 1px 6px #EC4899;
-  }
-  to {
-    box-shadow: 0 0 3px #F472B6;
-  }
+  from { box-shadow: 1px 1px 6px #EC4899; }
+  to { box-shadow: 0 0 3px #F472B6; }
 }
 
 @keyframes glowNeon {
-  from {
-    box-shadow: inset 0px 0px 16px rgba(139, 92, 246, 0.45);
-  }
-  to {
-    box-shadow: inset 0px 0px 32px #EC4899, 0 0 16px rgba(236, 72, 153, 0.35);
-  }
+  from { box-shadow: inset 0px 0px 16px rgba(139, 92, 246, 0.45); }
+  to { box-shadow: inset 0px 0px 32px #EC4899, 0 0 16px rgba(236, 72, 153, 0.35); }
 }
 
 @keyframes leftArrowAnim {
-  from {
-    transform: translate(0px);
-  }
-  to {
-    transform: translateX(10px);
-  }
+  from { transform: translateX(0px); }
+  to { transform: translateX(-6px); }
 }
 
 @keyframes rightArrowAnim {
-  from {
-    transform: translate(0px);
-  }
-  to {
-    transform: translateX(-10px);
-  }
+  from { transform: translateX(0px); }
+  to { transform: translateX(6px); }
 }
