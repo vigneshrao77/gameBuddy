@@ -5,7 +5,6 @@ import { gamesRegistry } from '@/config/games';
 import { GameGrid } from '@/components/games/GameGrid';
 import { StarButton } from '@/components/ui/StarButton';
 import { TunnelAnimation } from '@/components/ui/TunnelAnimation';
-import { FallingSphere } from '@/components/ui/FallingSphere';
 import { motion } from 'motion/react';
 
 export default function HomePage() {
@@ -21,7 +20,6 @@ export default function HomePage() {
         <div className="hero-copy">
           <div className="hero-text">
             <h1 style={{ position: 'relative' }}>
-              <FallingSphere />
               Quick games.<br/>Real fun. Zero setup.
             </h1>
             <p className="sub">A shelf of tiny browser games built for the gaps between things: waiting rooms, coffee breaks, and the last five minutes before a call. Pick one and you&apos;re playing in seconds.</p>
