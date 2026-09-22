@@ -89,9 +89,10 @@ const rings = Array.from({ length: RING_COUNT }, (_, i) => {
 
   /*
     Proportional vertical movement.
+    Increased amplitude for a much more dramatic up/down wave.
   */
-  const bounceUp = 7 + t * 14;
-  const bounceDown = 4 + t * 9;
+  const bounceUp = 20 + t * 45;
+  const bounceDown = 14 + t * 30;
 
   return {
     index: i,
