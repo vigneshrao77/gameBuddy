@@ -35,7 +35,7 @@ export function GetStartedButton({
 
   if (href) {
     return (
-      <Link href={href} className={classes}>
+      <Link href={href} className={classes} prefetch={true}>
         <RocketIcon />
         <span>{children}</span>
       </Link>

@@ -11,6 +11,7 @@ export function GameContainer({ game, children }: { game: GameMeta; children: Re
       <div className="game-topbar">
         <Link
           href="/games"
+          prefetch={true}
           className="back-to-games"
           style={{
             display: 'inline-flex', alignItems: 'center', gap: '8px',

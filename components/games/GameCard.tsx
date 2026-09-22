@@ -25,7 +25,7 @@ export function GameCard({ game }: { game: GameMeta }) {
 
   if (isAvailable) {
     return (
-      <Link href={game.route} className="card available" data-category={game.category}>
+      <Link href={game.route} className="card available" data-category={game.category} prefetch={true}>
         <div className="card2">
           <div className="card-top">
             <div className="icon-roundel"><Icon /></div>
