@@ -255,15 +255,15 @@ export const TunnelAnimation = () => {
 
         @keyframes ring-wave {
           0%, 100% {
-            transform: translateZ(0px) scale(1);
+            transform: translateZ(0px) translateY(0px) scale(1);
             opacity: var(--base-opacity);
           }
           35% {
-            transform: translateZ(calc(var(--depth) * 1px)) scale(var(--scale-peak));
+            transform: translateZ(calc(var(--depth) * 1px)) translateY(-18px) scale(var(--scale-peak));
             opacity: var(--peak-opacity);
           }
           65% {
-            transform: translateZ(calc(var(--depth) * -0.5px)) scale(0.97);
+            transform: translateZ(calc(var(--depth) * -0.5px)) translateY(14px) scale(0.97);
             opacity: calc(var(--base-opacity) * 0.7);
           }
         }
