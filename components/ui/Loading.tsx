@@ -1,5 +1,6 @@
 import React from 'react';
 import { Loader2 } from 'lucide-react';
+import VortexLoader from './VortexLoader';
 
 export interface LoadingProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: 'rolling' | 'spinner';
@@ -18,7 +19,7 @@ export function Loading({ variant = 'rolling', className = '', size, ...props }:
 
   return (
     <div className={`flex flex-col items-center justify-center p-6 gap-3 ${className}`} {...props}>
-      <div className="loader" style={size ? { fontSize: `${size}px` } : undefined} />
+      <VortexLoader />
       <span className="sr-only">Loading...</span>
     </div>
   );

@@ -1,0 +1,196 @@
+/* ============================================================
+   VORTEX LOADER — Premium 3D neon energy core
+   ============================================================ */
+
+.vortex {
+  --size: clamp(140px, 28vmin, 280px);
+  position: relative;
+  width: var(--size);
+  height: var(--size);
+  perspective: 900px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Atmospheric radial glow behind the vortex */
+.vortex::before {
+  content: '';
+  position: absolute;
+  width: 160%;
+  height: 160%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(139, 92, 246, 0.12) 0%,
+    rgba(139, 92, 246, 0.04) 40%,
+    transparent 70%
+  );
+  animation: atmospherePulse 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* The 3D scene container — tilted + slow rotation */
+.scene {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: rotateX(68deg);
+  animation:
+    vortexRotate 30s linear infinite,
+    vortexBreathe 8s ease-in-out infinite;
+}
+
+/* Individual ring */
+.ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  border: 1.5px solid rgba(139, 92, 246, 0.6);
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+  animation: ringWave var(--duration) ease-in-out infinite;
+  animation-delay: var(--delay);
+
+  /* Neon glow — layered for luminosity */
+  box-shadow:
+    0 0 4px rgba(139, 92, 246, 0.4),
+    0 0 12px rgba(139, 92, 246, 0.2),
+    inset 0 0 6px rgba(167, 139, 250, 0.15);
+
+  /* Size & position driven by CSS custom properties */
+  width: var(--ring-size);
+  height: var(--ring-size);
+  margin-left: calc(var(--ring-size) / -2);
+  margin-top: calc(var(--ring-size) / -2);
+  opacity: var(--ring-opacity);
+}
+
+/* Inner rings get brighter glow */
+.ringInner {
+  border-color: rgba(167, 139, 250, 0.8);
+  box-shadow:
+    0 0 6px rgba(167, 139, 250, 0.6),
+    0 0 18px rgba(139, 92, 246, 0.35),
+    0 0 30px rgba(139, 92, 246, 0.12),
+    inset 0 0 8px rgba(196, 181, 253, 0.25);
+}
+
+/* Mid rings */
+.ringMid {
+  border-color: rgba(139, 92, 246, 0.55);
+  box-shadow:
+    0 0 5px rgba(139, 92, 246, 0.35),
+    0 0 14px rgba(139, 92, 246, 0.18),
+    inset 0 0 6px rgba(167, 139, 250, 0.12);
+}
+
+/* Outer rings — atmospheric, softer */
+.ringOuter {
+  border-color: rgba(124, 58, 237, 0.3);
+  box-shadow:
+    0 0 4px rgba(124, 58, 237, 0.25),
+    0 0 10px rgba(139, 92, 246, 0.1),
+    inset 0 0 4px rgba(139, 92, 246, 0.06);
+}
+
+/* ---- Central energy core ---- */
+.core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12%;
+  height: 12%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) translateZ(2px);
+  background: radial-gradient(
+    circle,
+    rgba(237, 233, 254, 0.95) 0%,
+    rgba(196, 181, 253, 0.7) 35%,
+    rgba(139, 92, 246, 0.4) 65%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 10px rgba(196, 181, 253, 0.8),
+    0 0 25px rgba(139, 92, 246, 0.5),
+    0 0 50px rgba(139, 92, 246, 0.2);
+  animation: corePulse 4s ease-in-out infinite;
+}
+
+/* Secondary core glow layer */
+.core::after {
+  content: '';
+  position: absolute;
+  inset: -60%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(139, 92, 246, 0.2) 0%,
+    transparent 70%
+  );
+  animation: corePulse 4s ease-in-out infinite reverse;
+}
+
+/* ============================================================
+   KEYFRAMES
+   ============================================================ */
+
+/* Ring wave — vertical oscillation through the structure */
+@keyframes ringWave {
+  0%, 100% {
+    transform: translateZ(var(--z-base)) scale(var(--scale-base));
+    opacity: var(--ring-opacity);
+  }
+  25% {
+    transform: translateZ(calc(var(--z-base) + 18px)) scale(calc(var(--scale-base) * 1.03));
+    opacity: calc(var(--ring-opacity) * 1.15);
+  }
+  50% {
+    transform: translateZ(calc(var(--z-base) + 30px)) scale(calc(var(--scale-base) * 1.05));
+    opacity: calc(var(--ring-opacity) * 1.25);
+  }
+  75% {
+    transform: translateZ(calc(var(--z-base) + 12px)) scale(calc(var(--scale-base) * 1.02));
+    opacity: calc(var(--ring-opacity) * 1.1);
+  }
+}
+
+/* Slow 3D rotation of the entire vortex */
+@keyframes vortexRotate {
+  from { transform: rotateX(68deg) rotateZ(0deg); }
+  to   { transform: rotateX(68deg) rotateZ(360deg); }
+}
+
+/* Breathing — subtle scale pulse */
+@keyframes vortexBreathe {
+  0%, 100% { scale: 1; }
+  50%      { scale: 1.04; }
+}
+
+/* Core pulse */
+@keyframes corePulse {
+  0%, 100% {
+    opacity: 0.85;
+    transform: translate(-50%, -50%) translateZ(2px) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) translateZ(4px) scale(1.2);
+  }
+}
+
+/* Atmospheric background glow pulse */
+@keyframes atmospherePulse {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50%      { opacity: 1;   transform: scale(1.08); }
+}
+
+/* ---- Reduced motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  .scene { animation: none; transform: rotateX(68deg); }
+  .ring  { animation: none; }
+  .core  { animation: none; opacity: 1; }
+  .vortex::before { animation: none; }
+}
