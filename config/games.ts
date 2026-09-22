@@ -2,6 +2,17 @@ import { GameMeta } from "@/types/game";
 
 export const gamesRegistry: GameMeta[] = [
   {
+    id: "checkers",
+    name: "Checkers",
+    description: "Classic 8×8 board game. Jump your opponent's pieces and get crowned King.",
+    category: "strategy",
+    icon: "LayoutTemplate",
+    route: "/games/checkers",
+    difficulty: "medium",
+    players: "1",
+    status: "available",
+  },
+  {
     id: "connect-four",
     name: "Connect Four",
     description: "Drop discs into the 7×6 grid. First to connect four in a row wins.",
