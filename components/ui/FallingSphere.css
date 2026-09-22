@@ -21,7 +21,7 @@
   top: 0;
   left: 0;
   width: 100%;
-
+  
   /* Plays ONLY once (forwards) */
   animation: fs-move-x 3.5s cubic-bezier(0.3, 0, 0.7, 1) forwards;
   will-change: transform, opacity;
@@ -53,66 +53,20 @@
   top: 4px;
   transform-origin: top center;
   border-radius: 50%;
-
+  
   background: linear-gradient(
     to bottom,
     rgba(205, 170, 255, 0.45),
     rgba(140, 80, 240, 0.18),
     transparent
   );
-
-  /* Was 5px — on a 7px-wide element that blurs the gradient into a
-     formless smear rather than a legible streak. 3px keeps the taper
-     visible while still reading as soft light. */
-  filter: blur(3px);
+  
+  filter: blur(5px);
   opacity: 0;
 
   /* Plays ONLY once (forwards) */
   animation: fs-trail 3.5s ease-in forwards;
   pointer-events: none;
-}
-
-/* =========================================================
-   ATMOSPHERIC GLOW
-   Moved out from inside .fs-ball (see JSX) so it no longer inherits
-   the ball's squash-and-stretch transform. A physical mass squashing
-   on impact makes sense; a soft ambient halo squeezing to 0.4× width
-   along with it reads as broken, not stylized. The wrapper below
-   still fades out in sync with the ball via fs-glow-fade, so it
-   disappears at the same moment — it just doesn't get pinched.
-========================================================= */
-
-.fs-glow-wrap {
-  position: absolute;
-  top: -17px;
-  left: -17px;
-  width: 47px;
-  height: 47px;
-  z-index: 2;
-  pointer-events: none;
-
-  /* Plays ONLY once (forwards) — fades with the ball, not squashed with it */
-  animation: fs-glow-fade 3.5s cubic-bezier(0.3, 0, 0.7, 1) forwards;
-}
-
-.fs-glow {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-
-  background: radial-gradient(
-    circle,
-    rgba(235, 215, 255, 0.45) 0%,
-    rgba(190, 145, 255, 0.3) 22%,
-    rgba(128, 65, 235, 0.12) 48%,
-    transparent 72%
-  );
-
-  filter: blur(6px);
-  opacity: 0.8;
-
-  /* Kept infinite for atmospheric pulsing while rolling */
-  animation: fs-glow-pulse 1.8s ease-in-out infinite;
 }
 
 /* =========================================================
@@ -141,7 +95,7 @@
     0 0 48px rgba(105, 45, 220, 0.45);
 
   /* Plays ONLY once (forwards) */
-  animation: fs-squash 3.5s cubic-bezier(0.3, 0, 0.7, 1) forwards;
+  animation: fs-squash 3.5s ease-in forwards;
   will-change: transform, filter, opacity;
   z-index: 3;
 }
@@ -164,6 +118,31 @@
 }
 
 /* =========================================================
+   ATMOSPHERIC GLOW
+========================================================= */
+
+.fs-glow {
+  position: absolute;
+  inset: -17px;
+  border-radius: 50%;
+
+  background: radial-gradient(
+    circle,
+    rgba(235, 215, 255, 0.45) 0%,
+    rgba(190, 145, 255, 0.3) 22%,
+    rgba(128, 65, 235, 0.12) 48%,
+    transparent 72%
+  );
+
+  filter: blur(6px);
+  opacity: 0.8;
+  
+  /* Kept infinite for atmospheric pulsing while rolling */
+  animation: fs-glow-pulse 1.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* =========================================================
    KEYFRAMES
 ========================================================= */
 
@@ -171,11 +150,7 @@
   0% { transform: translateX(-10%); opacity: 0; }
   5% { opacity: 1; }
   85% { transform: translateX(100%); opacity: 1; } /* Perfectly smooth scroll */
-  /* Was fading straight to 0 here, at the exact same moment the squash
-     peaked — the payoff of the stretch was invisible. Now it stays
-     fully visible through the stretch, then fades after. */
-  92% { transform: translateX(100%); opacity: 1; }
-  100% { transform: translateX(100%); opacity: 0; }
+  100% { transform: translateX(100%); opacity: 0; } /* Drops down and vanishes */
 }
 
 @keyframes fs-move-y {
@@ -188,11 +163,8 @@
 @keyframes fs-squash {
   /* Perfectly round while rolling */
   0%, 85% { transform: scale(1, 1); }
-  /* Stretch now peaks at 92% — the same beat as the trail's flare —
-     while opacity is still 1, so the elongation is actually seen. */
-  92% { transform: scale(0.4, 2.0); }
-  /* Settles slightly as it fades, instead of vanishing mid-stretch */
-  100% { transform: scale(0.55, 1.6); }
+  /* Stretches dramatically during the final fall */
+  100% { transform: scale(0.4, 2.0); }
 }
 
 @keyframes fs-trail {
@@ -202,16 +174,6 @@
   92% { opacity: 0.8; transform: scaleY(1.5); }
   /* Fades out */
   100% { opacity: 0; transform: scaleY(2.2); }
-}
-
-@keyframes fs-glow-fade {
-  /* Mirrors fs-move-x's opacity beats exactly, so the halo vanishes
-     at the same instant as the ball — no separate transform, so it
-     never inherits the squash. */
-  0% { opacity: 0; }
-  5% { opacity: 1; }
-  92% { opacity: 1; }
-  100% { opacity: 0; }
 }
 
 @keyframes fs-glow-pulse {
@@ -224,7 +186,7 @@
 ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
-  .fs-x, .fs-y, .fs-ball, .fs-glow, .fs-glow-wrap, .fs-trail {
+  .fs-x, .fs-y, .fs-ball, .fs-glow, .fs-trail {
     animation: none;
     opacity: 0; /* Hide if motion is disabled */
   }
